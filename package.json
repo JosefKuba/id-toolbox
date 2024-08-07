@@ -17,27 +17,25 @@
     "mac": {
       "icon": "assets/icons/mac/icon.icns",
       "target": [
-        "dmg",
-        "zip"
+        "dmg"
       ]
     },
     "win": {
       "icon": "assets/icons/win/icon.ico",
       "target": [
-        "nsis",
-        "zip"
+        "nsis"
       ]
     }
   },
   "devDependencies": {
     "electron": "^31.3.1",
-    "electron-builder": "^24.13.3",
-    "electron-reload": "^2.0.0-alpha.1"
+    "electron-builder": "^24.13.3"
   },
   "dependencies": {
     "axios": "^1.7.3",
     "bootstrap": "^5.3.3",
     "fs-extra": "^11.2.0",
-    "unzipper": "^0.12.3"
+    "unzipper": "^0.12.3",
+    "electron-reload": "^2.0.0-alpha.1"
   }
 }
