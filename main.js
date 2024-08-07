@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron');
 const fs = require('fs-extra');
 const path = require('path');
 const axios = require('axios');
@@ -16,12 +16,6 @@ const menuTemplate = [
     {
         label: '文件',
         submenu: [
-            {
-                label: '关于',
-                click: () => {
-                    console.log('关于应用');
-                }
-            },
             {
                 label: '退出',
                 role: 'quit'
@@ -67,13 +61,13 @@ const menuTemplate = [
             {
                 label: '使用说明',
                 click: () => {
-                    console.log('关于应用');
+                    shell.openExternal("https://docs.google.com/document/d/1ssxfJXgi2wnVs9peMa2u2pzwgSOHVZRQ4C7UBuNx7r4/edit");
                 }
             },
             {
                 label: '问题反馈',
                 click: () => {
-                    console.log('关于应用');
+                    shell.openExternal("https://docs.google.com/spreadsheets/d/1DSqhoY1uVN3Kq0x73e_BZz4EQ6Kte8b2tL7_YLKVDbo/edit?gid=1236144827");
                 }
             }
         ]
