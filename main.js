@@ -33,12 +33,12 @@ const menuTemplate = [
         ]
     },
     {
-        label: '工作区',
+        label: '功能',
         submenu: [
             {
-                label: '匹配中文名称',
+                label: '好友ID查询',
                 click: () => {
-                    mainWindow.loadFile('chinese-names.html');
+                    mainWindow.loadFile('index.html');
                 }
             },
             {
@@ -48,11 +48,11 @@ const menuTemplate = [
                 }
             },
             {
-                label: '好友ID查询',
+                label: '匹配中文名称',
                 click: () => {
-                    mainWindow.loadFile('index.html');
+                    mainWindow.loadFile('chinese-names.html');
                 }
-            },
+            }
         ]
     },
     {
@@ -94,8 +94,8 @@ if (!fs.existsSync(downloadDir)) {
 
 function createWindow() {
     const mainWindow = new BrowserWindow({
-        width: 1200,
-        height: 800,
+        width: 800,
+        height: 650,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true,
