@@ -138,7 +138,7 @@ app.whenReady().then(() => {
 
             console.log("好友数据更新中...");
 
-            mainWindow.webContents.send("id-update", "ID数据更新中...");
+            // mainWindow.webContents.send("id-update", "ID数据更新中...");
 
             // 下载数据文件，并更新配置文件
             let downloadUrl = "https://drive.usercontent.google.com/download?id=" + data.GoogleId + "&export=download&authuser=0&confirm=t"
@@ -151,7 +151,6 @@ app.whenReady().then(() => {
             }
 
             async function downloadFile() {
-                mainWindow.webContents.send("id-update-download", "ID文件下载中...");
                 try {
                     const response = await axios({
                         url: downloadUrl,
@@ -172,6 +171,7 @@ app.whenReady().then(() => {
                 }
             }
 
+            mainWindow.webContents.send("id-update-download", "ID文件下载中...");
             downloadFile()
                 .then(() => {
                     console.log('文件下载成功:', zipFilePath);
