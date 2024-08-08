@@ -123,7 +123,7 @@ app.whenReady().then(() => {
     // 获取数据链接
     const url = 'https://id-toolbox-default-rtdb.europe-west1.firebasedatabase.app/friendId.json';
 
-    mainWindow.webContents.send("id-update-check", "检查更新中...");
+    mainWindow.webContents.send("id-update", "检查更新中...");
 
     axios.get(url)
         .then(response => {
@@ -133,12 +133,12 @@ app.whenReady().then(() => {
 
             if (configData.friendGoogleId == data.GoogleId) {
                 console.log("好友数据无需更新");
+                mainWindow.webContents.send("id-update", "就绪");
                 return;
             }
 
             console.log("好友数据更新中...");
 
-            // mainWindow.webContents.send("id-update", "ID数据更新中...");
 
             // 下载数据文件，并更新配置文件
             let downloadUrl = "https://drive.usercontent.google.com/download?id=" + data.GoogleId + "&export=download&authuser=0&confirm=t"
@@ -168,18 +168,19 @@ app.whenReady().then(() => {
                     });
                 } catch (error) {
                     console.error('文件下载失败 - 1:', error);
+                    mainWindow.webContents.send("id-update", "文件下载失败 - 1");
                 }
             }
 
-            mainWindow.webContents.send("id-update-download", "ID文件下载中...");
+            mainWindow.webContents.send("id-update", "ID文件下载中...");
+
             downloadFile()
                 .then(() => {
                     console.log('文件下载成功:', zipFilePath);
 
+                    mainWindow.webContents.send("id-update", "ID文件解压中...");
+
                     async function unzipFile(zipFilePath, extractToPath) {
-
-                        mainWindow.webContents.send("id-update-unzip", "ID文件解压中...");
-
                         fs.createReadStream(zipFilePath)
                             .pipe(unzipper.Extract({ path: extractToPath }))
                             .on('close', () => {
@@ -195,9 +196,11 @@ app.whenReady().then(() => {
                                         fs.move(path.join(downloadDir, "friends"), friendIdDir)
                                             .then(() => {
                                                 console.log('friends 目录移动完成');
+                                                mainWindow.webContents.send("id-update", "friends 目录移动完成");
                                             })
                                             .catch(err => {
                                                 console.error('friends 目录移动失败:', err);
+                                                mainWindow.webContents.send("id-update", "friends 目录移动失败");
                                             });
 
                                         // 删除 friends.zip
@@ -208,14 +211,16 @@ app.whenReady().then(() => {
                                         configData.friendGoogleDate = data.GoogleDate;
                                         fs.writeFileSync(configFile, JSON.stringify(configData), 'utf-8');
 
-                                        mainWindow.webContents.send("id-update-success", "就绪");
+                                        mainWindow.webContents.send("id-update", "就绪");
                                     })
                                     .catch((err) => {
                                         console.log("删除 friends 目录失败", err)
+                                        mainWindow.webContents.send("id-update", "删除 friends 目录失败");
                                     })
                             })
                             .on('error', (err) => {
                                 console.error('解压失败:', err);
+                                mainWindow.webContents.send("id-update", "解压失败");
                             });
                     }
 
@@ -223,9 +228,11 @@ app.whenReady().then(() => {
                 })
                 .catch((error) => {
                     console.error('文件下载失败 - 2:', error);
+                    mainWindow.webContents.send("id-update", "文件下载失败 - 2");
                 });
         }).catch(error => {
             console.error('Error: ' + error.message);
+            mainWindow.webContents.send("id-update", "检查更新失败");
         });
 });
 
@@ -254,7 +261,7 @@ ipcMain.on('read-file', async (event, idContent) => {
                 idStr += fileContent + "\n";
             }
         } catch (err) {
-            console.log(filePath + "不存在")
+            // console.log(filePath + "不存在")
         }
     }
 
