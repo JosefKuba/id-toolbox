@@ -94,8 +94,8 @@ if (!fs.existsSync(downloadDir)) {
 
 function createWindow() {
     const mainWindow = new BrowserWindow({
-        width: 800,
-        height: 650,
+        width: 1000,
+        height: 800,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true,
@@ -123,7 +123,7 @@ app.whenReady().then(() => {
     // 获取数据链接
     const url = 'https://id-toolbox-default-rtdb.europe-west1.firebasedatabase.app/friendId.json';
 
-    mainWindow.webContents.send("id-update-check", "检查ID是否需要更新");
+    mainWindow.webContents.send("id-update-check", "检查更新中...");
 
     axios.get(url)
         .then(response => {
@@ -138,7 +138,7 @@ app.whenReady().then(() => {
 
             console.log("好友数据更新中...");
 
-            mainWindow.webContents.send("id-update", "ID数据更新中");
+            mainWindow.webContents.send("id-update", "ID数据更新中...");
 
             // 下载数据文件，并更新配置文件
             let downloadUrl = "https://drive.usercontent.google.com/download?id=" + data.GoogleId + "&export=download&authuser=0&confirm=t"
@@ -151,7 +151,7 @@ app.whenReady().then(() => {
             }
 
             async function downloadFile() {
-                mainWindow.webContents.send("id-update-download", "ID文件下载中");
+                mainWindow.webContents.send("id-update-download", "ID文件下载中...");
                 try {
                     const response = await axios({
                         url: downloadUrl,
@@ -178,7 +178,7 @@ app.whenReady().then(() => {
 
                     async function unzipFile(zipFilePath, extractToPath) {
 
-                        mainWindow.webContents.send("id-update-unzip", "ID文件解压中");
+                        mainWindow.webContents.send("id-update-unzip", "ID文件解压中...");
 
                         fs.createReadStream(zipFilePath)
                             .pipe(unzipper.Extract({ path: extractToPath }))
