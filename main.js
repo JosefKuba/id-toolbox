@@ -94,8 +94,8 @@ if (!fs.existsSync(downloadDir)) {
 
 function createWindow() {
     const mainWindow = new BrowserWindow({
-        width: 1000,
-        height: 800,
+        width: 800,
+        height: 680,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true,
@@ -251,15 +251,25 @@ ipcMain.on('read-file', async (event, idContent) => {
         try {
             let fileContent = fs.readFileSync(friendIdDir + "/" + id, 'utf-8');
             if (fileContent) {
-                idStr += fileContent + "\r";
+                idStr += fileContent + "\n";
             }
         } catch (err) {
             console.log(filePath + "不存在")
         }
     }
 
-    // 处理多余空行
-    idStr = idStr.trim("\r")
+    // 去重
+    let uniqueArr = [...new Set(idStr.split(/\r?\n/))];
 
-    event.sender.send('file-content', idStr);
+    // 移除空
+    uniqueArr = uniqueArr.filter(Boolean)
+
+    let result;
+    if (uniqueArr.length == 0) {
+        result = "无结果"
+    } else {
+        result = uniqueArr.join("\n")
+    }
+
+    event.sender.send('file-content', result);
 });
