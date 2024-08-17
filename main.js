@@ -3,12 +3,39 @@ const fs = require('fs-extra');
 const path = require('path');
 const axios = require('axios');
 const unzipper = require('unzipper');
+import { EVDInit } from "electron-version-deployer-cli/dist/main";
 
 // 自动重载应用
-require('electron-reload')(__dirname, {
-    electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+// require('electron-reload')(__dirname, {
+//     electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+// });
+
+EVDInit({
+    remoteUrl: import.meta.env.REMOTE_URL,
+    logo: `file://${join(
+        app.getAppPath(),
+        "packages",
+        "main",
+        "dist",
+        "icon.png"
+    )}`,
+    onError(error) {
+        //  记录更新检测遇到的错误
+        writeError(error, "evd");
+    },
+    onBeforeNewPkgInstall(next, version) {
+        //  window 下如果某些程序正在使用 node_modules 会导致
+        //  Error: EBUSY: resource busy or locked 错误
+
+        //  因此在安装前, 你可以手动关闭这些程序
+        DB.close();
+
+        //  执行 next 方法，继续安装
+        next();
+    },
 });
 
+s
 let mainWindow;
 
 // 定义菜单
@@ -280,3 +307,4 @@ ipcMain.on('read-file', async (event, idContent) => {
 
     event.sender.send('file-content', result);
 });
+

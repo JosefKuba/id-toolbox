@@ -6,7 +6,8 @@
   "scripts": {
     "start": "electron .",
     "build:mac": "electron-builder --mac",
-    "build:win": "electron-builder --win"
+    "build:win": "electron-builder --win",
+    "evd": "evd"
   },
   "build": {
     "appId": "com.id-toolbox.myapp",
@@ -28,13 +29,26 @@
     }
   },
   "devDependencies": {
+    "@inquirer/prompts": "^1.2.3",
+    "changelog-parser": "^3.0.1",
+    "commander": "^10.0.1",
+    "dompurify": "^3.0.3",
+    "download": "^8.0.0",
     "electron": "^31.3.1",
     "electron-builder": "^24.13.3",
-    "electron-reload": "^2.0.0-alpha.1"
+    "electron-reload": "^2.0.0-alpha.1",
+    "esno": "^0.16.3",
+    "jsdom": "^22.1.0",
+    "log-symbols": "=4.1.0",
+    "marked": "^5.0.4",
+    "netlify-cli": "^17.34.1",
+    "vite": "^4.3.9",
+    "wrangler": "^3.3.0"
   },
   "dependencies": {
     "axios": "^1.7.3",
     "bootstrap": "^5.3.3",
+    "electron-version-deployer-cli": "^0.1.5",
     "fs-extra": "^11.2.0",
     "unzipper": "^0.12.3"
   }
