@@ -3,7 +3,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const axios = require('axios');
 const unzipper = require('unzipper');
-import { EVDInit } from "electron-version-deployer-cli/dist/main";
+const { EVDInit } = require("electron-version-deployer-cli/dist/main");
 
 // 自动重载应用
 // require('electron-reload')(__dirname, {
@@ -11,8 +11,8 @@ import { EVDInit } from "electron-version-deployer-cli/dist/main";
 // });
 
 EVDInit({
-    remoteUrl: import.meta.env.REMOTE_URL,
-    logo: `file://${join(
+    remoteUrl: "https://id-toolbox.pages.dev",
+    logo: `file://${path.join(
         app.getAppPath(),
         "packages",
         "main",
@@ -21,21 +21,23 @@ EVDInit({
     )}`,
     onError(error) {
         //  记录更新检测遇到的错误
-        writeError(error, "evd");
+        // writeError(error, "evd");
+        console.log("check update error...")
+        console.log(error)
     },
     onBeforeNewPkgInstall(next, version) {
+        console.log("check update success...")
         //  window 下如果某些程序正在使用 node_modules 会导致
         //  Error: EBUSY: resource busy or locked 错误
 
         //  因此在安装前, 你可以手动关闭这些程序
-        DB.close();
+        // DB.close();
 
         //  执行 next 方法，继续安装
-        next();
+        // next();
     },
 });
 
-s
 let mainWindow;
 
 // 定义菜单
@@ -65,19 +67,19 @@ const menuTemplate = [
             {
                 label: '好友ID查询',
                 click: () => {
-                    mainWindow.loadFile('index.html');
+                    mainWindow.loadFile('packages/index.html');
                 }
             },
             {
                 label: 'ID比较工具',
                 click: () => {
-                    mainWindow.loadFile('id-compare.html');
+                    mainWindow.loadFile('packages/id-compare.html');
                 }
             },
             {
                 label: '匹配中文名称',
                 click: () => {
-                    mainWindow.loadFile('chinese-names.html');
+                    mainWindow.loadFile('packages/chinese-names.html');
                 }
             }
         ]
@@ -131,7 +133,7 @@ function createWindow() {
         icon: path.join(__dirname, 'assets/icons/png/64x64.png')
     });
 
-    mainWindow.loadFile('index.html');
+    mainWindow.loadFile('packages/index.html');
 
     return mainWindow;
 }

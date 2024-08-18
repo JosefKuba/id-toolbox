@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "ID库工具箱",
   "main": "main.js",
+  "author": "Josef Kuba",
   "scripts": {
     "start": "electron .",
     "build:mac": "electron-builder --mac",
@@ -12,6 +13,7 @@
   "build": {
     "appId": "com.id-toolbox.myapp",
     "productName": "ID工具箱",
+    "asar": false,
     "directories": {
       "output": "dist"
     },
