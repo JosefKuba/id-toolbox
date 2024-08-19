@@ -1,10 +1,27 @@
+let os = require("os")
 import { defineEVDConfig } from "electron-version-deployer-cli";
 
+let folder, compileCommand
+switch (os.platform()) {
+  case "win32":
+    folder = "dist/win-unpacked/resources/app"
+    compileCommand = "build:win"
+    break;
+  case "darwin":
+    folder = "dist/win-unpacked/resources/app"
+    compileCommand = "build:mac"
+    break;
+  case "linux":
+    folder = "dist/win-unpacked/resources/app"
+    compileCommand = "build:linux"
+    break;
+}
+
 export default defineEVDConfig({
-  compileCommand: "build:win",
+  compileCommand: compileCommand,
   changelogsPath: "CHANGELOG.md",
   sources: {
-    folder: "dist/win-unpacked/resources/app",
+    folder: folder,
     nodeModules: "node_modules",
     codes: "packages",
     packageJSON: "package.json",
