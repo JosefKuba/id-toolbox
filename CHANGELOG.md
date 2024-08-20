@@ -1,10 +1,9 @@
 # Changelog
 
-这是ID工具箱的更新记录
+## [1.1.0] - 2024-08-20
+### 新增
+- 关键词过滤功能
+- 软件自动更新
 
-## [1.1.0] - 2024-08-18
-### Added
-- Add a function
-
-### Fixed
-- Fixed a bug where the application would crash on startup.
+### 修复
+- 多个ID查询好友时，显示哪些ID未查询到

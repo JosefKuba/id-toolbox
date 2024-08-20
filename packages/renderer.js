@@ -19,4 +19,3 @@ ipcRenderer.on('file-content', (event, fileContent) => {
 ipcRenderer.on('id-update', (event, content) => {
     document.getElementById('sf-status').innerText = content;
 });
-

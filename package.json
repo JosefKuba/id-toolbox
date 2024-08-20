@@ -18,13 +18,13 @@
       "output": "dist"
     },
     "mac": {
-      "icon": "packages/assets/icons/mac/icon.icns",
+      "icon": "src/assets/icons/mac/icon.icns",
       "target": [
         "dmg"
       ]
     },
     "win": {
-      "icon": "packages/assets/icons/win/icon.ico",
+      "icon": "src/assets/icons/win/icon.ico",
       "target": [
         "nsis"
       ]
@@ -50,7 +50,7 @@
   "dependencies": {
     "axios": "^1.7.3",
     "bootstrap": "^5.3.3",
-    "electron-version-deployer-cli": "^0.1.5",
+    "electron-version-deployer-cli": "^0.1.6",
     "fs-extra": "^11.2.0",
     "unzipper": "^0.12.3"
   }

@@ -1,20 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <base target="_top">
-    <title>Square Calculator</title>
+    <meta charset="UTF-8">
+    <title>ID 工具箱</title>
+
     <style>
         /* 自定义样式，可以根据需要调整 */
         .input-textarea {
             float: left;
             width: 40%;
+            /* 调整左浮动 textarea 的宽度 */
             margin-right: 10px;
         }
 
         .output-textarea {
             float: right;
             width: 40%;
+            /* 调整右浮动 textarea 的宽度 */
             margin-left: 10px;
         }
 
@@ -52,68 +55,53 @@
         }
     </style>
 
-    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 
 <body>
     <div class="container mt-5">
-        <h1 style="text-align:center">ID 比较工具</h1>
-        <p>有时会遇到这样的场景：需要从许多ID中，删除掉一部分ID。这个工具可以方便的处理这个问题</p>
+        <h1 style="text-align:center">好友ID查询</h1>
+
+        <p>在一些情况下需要单独查询某一个ID的好友。24年4月之后筛的ID有备份，在左侧输入一个或者多个ID，点击查询按钮，右侧可以出现对应的好友ID。</p>
 
         <div class="row">
             <div class="col-md-6 text-left">
                 <p class="text-left">使用说明 👉 <a
-                        href="https://docs.google.com/document/d/1Nuw4HVIbYaBn4Jt_oWYoYKIqLovccjM6WwlrXWnHjSI/edit?usp=sharing"
+                        href="https://docs.google.com/document/d/1ssxfJXgi2wnVs9peMa2u2pzwgSOHVZRQ4C7UBuNx7r4/edit"
                         target="_black">链接</a></p>
             </div>
             <div class="col-md-6 text-right">
                 <p class="text-right">问题反馈 👉 <a
-                        href="https://docs.google.com/spreadsheets/d/1DSqhoY1uVN3Kq0x73e_BZz4EQ6Kte8b2tL7_YLKVDbo/edit?gid=1998303978#gid=1998303978"
+                        href="https://docs.google.com/spreadsheets/d/1DSqhoY1uVN3Kq0x73e_BZz4EQ6Kte8b2tL7_YLKVDbo/edit?gid=1236144827"
                         target="_black">链接</a></p>
             </div>
         </div>
 
-
-        <div class="row">
-            <div class="col-md-3">
+        <div class="row mt-4">
+            <div class="col-md-5">
                 <textarea id="inputText" class="form-control input-textarea" style="height: 350px;"
-                    placeholder="所有ID"></textarea>
-            </div>
-
-            <div class="col-md-3">
-                <textarea id="inputTextRemove" class="form-control input-textarea" style="height: 350px;"
-                    placeholder="要删除的ID"></textarea>
+                    placeholder="100000257231664"></textarea>
             </div>
 
             <div class="col-md-2">
                 <div class="button-group h-100 d-flex flex-column justify-content-center">
-                    <button class="btn btn-primary mb-2" onclick="performQuery()">移除</button>
+                    <button id="query" class="btn btn-primary mb-2">查询</button>
                     <button class="btn btn-success mb-2" onclick="copyOutput()">复制</button>
                     <button class="btn btn-danger" onclick="clearInputAndOutput()">清空</button>
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <textarea id="outputText" class="form-control output-textarea" style="height: 350px;" readonly
                     placeholder="结果将展示在这里"></textarea>
             </div>
         </div>
     </div>
 
-    <footer> version : 1.0.0 </footer>
+    <footer> 状态 : <span id="sf-status">就绪</span> </footer>
 
     <script>
-        function performQuery() {
-            var outputText = document.getElementById('outputText');
-            outputText.value = '处理中...';
-
-            var inputAll = document.getElementById('inputText').value;
-            var inputRemove = document.getElementById('inputTextRemove').value;
-
-            var result = queryFunction(inputAll, inputRemove);
-
-            updateOutput(result);
-        }
 
         function updateOutput(output) {
             document.getElementById('outputText').value = output;
@@ -125,31 +113,21 @@
             document.execCommand('copy');
         }
 
+        function clearOutput() {
+            var outputText = document.getElementById('outputText');
+            outputText.value = '';
+        }
+
         function clearInputAndOutput() {
             var outputText = document.getElementById('outputText');
             outputText.value = '';
 
             var inputText = document.getElementById('inputText');
-            outputText.value = '';
-
-            var inputText2 = document.getElementById('inputTextRemove');
-            inputText2.value = '';
-        }
-
-        function queryFunction(inputAll, inputRemove) {
-
-            let linesAll = inputAll.replace(/ +/g, '').split(/\r?\n/);
-            let linesRemove = inputRemove.replace(/ +/g, '').split(/\r?\n/);
-
-            let result = arrayDifference(linesAll, linesRemove);
-
-            return result.join("\n");
-        }
-
-        function arrayDifference(arr1, arr2) {
-            return arr1.filter(element => !arr2.includes(element));
+            inputText.value = '';
         }
     </script>
+
+    <script src="../../renderer.js"></script>
 </body>
 
 </html>

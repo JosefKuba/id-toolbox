@@ -1,20 +1,21 @@
-let os = require("os")
+const os = require("os")
 import { defineEVDConfig } from "electron-version-deployer-cli";
 
 let folder, compileCommand
+
 switch (os.platform()) {
   case "win32":
     folder = "dist/win-unpacked/resources/app"
     compileCommand = "build:win"
     break;
   case "darwin":
-    folder = "dist/win-unpacked/resources/app"
+    folder = "dist/mac/ID工具箱.app/Contents/Resources/app"
     compileCommand = "build:mac"
     break;
-  case "linux":
-    folder = "dist/win-unpacked/resources/app"
-    compileCommand = "build:linux"
-    break;
+  // case "linux":
+  //   folder = ""
+  //   compileCommand = "build:linux"
+  //   break;
 }
 
 export default defineEVDConfig({
@@ -25,11 +26,6 @@ export default defineEVDConfig({
     nodeModules: "node_modules",
     codes: "packages",
     packageJSON: "package.json",
-  },
-  netlify: {
-    url: "",
-    token: "",
-    siteID: "",
   },
   cloudflare: {
     url: "https://id-toolbox.pages.dev",

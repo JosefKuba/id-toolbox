@@ -10,15 +10,13 @@ const { EVDInit } = require("electron-version-deployer-cli/dist/main");
 //     electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
 // });
 
-console.log("HIT...")
-
 EVDInit({
     remoteUrl: "https://id-toolbox.pages.dev",
     logo: `file://${path.join(
         app.getAppPath(),
         "packages",
-        "main",
-        "dist",
+        "assets",
+        "icons",
         "icon.png"
     )}`,
     onError(error) {
@@ -26,17 +24,6 @@ EVDInit({
         // writeError(error, "evd");
         console.log("check update error...")
         console.log(error)
-    },
-    onBeforeNewPkgInstall(next, version) {
-        console.log("check update success...")
-        //  window 下如果某些程序正在使用 node_modules 会导致
-        //  Error: EBUSY: resource busy or locked 错误
-
-        //  因此在安装前, 你可以手动关闭这些程序
-        DB.close();
-
-        //  执行 next 方法，继续安装
-        next();
     },
 });
 
@@ -69,19 +56,19 @@ const menuTemplate = [
             {
                 label: '好友ID查询',
                 click: () => {
-                    mainWindow.loadFile('packages/index.html');
+                    mainWindow.loadFile('packages/templates/friend-ids.html');
                 }
             },
             {
                 label: 'ID比较工具',
                 click: () => {
-                    mainWindow.loadFile('packages/id-compare.html');
+                    mainWindow.loadFile('packages/templates/id-compare.html');
                 }
             },
             {
                 label: '匹配中文名称',
                 click: () => {
-                    mainWindow.loadFile('packages/chinese-names.html');
+                    mainWindow.loadFile('packages/templates/chinese-names.html');
                 }
             }
         ]
@@ -135,7 +122,9 @@ function createWindow() {
         icon: path.join(__dirname, 'packages/assets/icons/png/64x64.png')
     });
 
-    mainWindow.loadFile('packages/index.html');
+    mainWindow.loadFile('packages/templates/friend-ids.html');
+
+    // mainWindow.webContents.openDevTools();
 
     return mainWindow;
 }
