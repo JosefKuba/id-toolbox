@@ -1,31 +1,17 @@
-const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron');
+const { app, BrowserWindow, Menu, shell } = require('electron');
 const fs = require('fs-extra');
 const path = require('path');
 const axios = require('axios');
 const unzipper = require('unzipper');
-const { EVDInit } = require("electron-version-deployer-cli/dist/main");
+
+const {configFile, friendIdDir, downloadDir } = require("./packages/const")
+require("./packages/update")
+require("./packages/get-friend-id")
 
 // 自动重载应用
 // require('electron-reload')(__dirname, {
 //     electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
 // });
-
-EVDInit({
-    remoteUrl: "https://id-toolbox.pages.dev",
-    logo: `file://${path.join(
-        app.getAppPath(),
-        "src",
-        "assets",
-        "icons",
-        "icon.png"
-    )}`,
-    onError(error) {
-        //  记录更新检测遇到的错误
-        // writeError(error, "evd");
-        console.log("check update error...")
-        console.log(error)
-    },
-});
 
 let mainWindow;
 
@@ -92,24 +78,6 @@ const menuTemplate = [
     }
 ];
 
-// 定义配置文件
-const configFile = path.join(app.getPath('userData'), 'config.json');
-if (!fs.existsSync(configFile)) {
-    fs.writeFileSync(configFile, JSON.stringify({ friendGoogleId: "", friendGoogleDate: "" }), 'utf-8');
-}
-
-// 定义存放ID文件的目录
-const friendIdDir = path.join(app.getPath('userData'), 'friends');
-if (!fs.existsSync(friendIdDir)) {
-    fs.mkdirSync(friendIdDir);
-}
-
-// 定义下载文件的目录
-const downloadDir = path.join(app.getPath('userData'), 'download');
-if (!fs.existsSync(downloadDir)) {
-    fs.mkdirSync(downloadDir);
-}
-
 function createWindow() {
     const mainWindow = new BrowserWindow({
         width: 800,
@@ -123,8 +91,6 @@ function createWindow() {
     });
 
     mainWindow.loadFile('src/pages/friend-ids/index.html');
-
-    // mainWindow.webContents.openDevTools();
 
     return mainWindow;
 }
@@ -260,44 +226,4 @@ app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') app.quit();
 });
 
-ipcMain.on('read-file', async (event, idContent) => {
-
-    let ids = idContent.split(/\r?\n/);
-
-    let idStr = "";
-    for (let i = 0; i < ids.length; i++) {
-        let id = ids[i].trim();
-
-        // 过滤掉没有分隔符的行
-        if (id.length === 0) {
-            continue;
-        }
-
-        let filePath = friendIdDir + "/" + id;
-
-        try {
-            let fileContent = fs.readFileSync(friendIdDir + "/" + id, 'utf-8');
-            if (fileContent) {
-                idStr += fileContent + "\n";
-            }
-        } catch (err) {
-            idStr = id + "\t不存在\n" + idStr
-        }
-    }
-
-    // 去重
-    let uniqueArr = [...new Set(idStr.split(/\r?\n/))];
-
-    // 移除空
-    uniqueArr = uniqueArr.filter(Boolean)
-
-    let result;
-    if (uniqueArr.length == 0) {
-        result = "无结果"
-    } else {
-        result = uniqueArr.join("\n")
-    }
-
-    event.sender.send('file-content', result);
-});
 
