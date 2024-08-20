@@ -14,7 +14,7 @@ EVDInit({
     remoteUrl: "https://id-toolbox.pages.dev",
     logo: `file://${path.join(
         app.getAppPath(),
-        "packages",
+        "src",
         "assets",
         "icons",
         "icon.png"
@@ -56,19 +56,19 @@ const menuTemplate = [
             {
                 label: '好友ID查询',
                 click: () => {
-                    mainWindow.loadFile('packages/templates/friend-ids.html');
+                    mainWindow.loadFile('src/pages/friend-ids/index.html');
                 }
             },
             {
                 label: 'ID比较工具',
                 click: () => {
-                    mainWindow.loadFile('packages/templates/id-compare.html');
+                    mainWindow.loadFile('src/pages/id-compare/index.html');
                 }
             },
             {
                 label: '匹配中文名称',
                 click: () => {
-                    mainWindow.loadFile('packages/templates/chinese-names.html');
+                    mainWindow.loadFile('src/pages/chinese-names/index.html');
                 }
             }
         ]
@@ -119,10 +119,10 @@ function createWindow() {
             nodeIntegration: true,
             contextIsolation: false,
         },
-        icon: path.join(__dirname, 'packages/assets/icons/png/64x64.png')
+        icon: path.join(__dirname, 'src/assets/icons/png/64x64.png')
     });
 
-    mainWindow.loadFile('packages/templates/friend-ids.html');
+    mainWindow.loadFile('src/pages/friend-ids/index.html');
 
     // mainWindow.webContents.openDevTools();
 

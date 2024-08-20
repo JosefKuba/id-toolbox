@@ -24,7 +24,7 @@ export default defineEVDConfig({
   sources: {
     folder: folder,
     nodeModules: "node_modules",
-    codes: "packages",
+    codes: "src",
     packageJSON: "package.json",
   },
   cloudflare: {

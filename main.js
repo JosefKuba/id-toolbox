@@ -1,1 +1,1 @@
-require("./packages/main")
+require("./src/main")
