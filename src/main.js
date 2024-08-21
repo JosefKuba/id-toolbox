@@ -91,7 +91,12 @@ function createWindow() {
         icon: path.join(__dirname, 'src/assets/icons/png/64x64.png')
     });
 
-    mainWindow.loadFile('src/pages/friend-ids/index.html');
+
+    // mainWindow.loadFile('src/pages/friend-ids/index.html');
+    mainWindow.loadFile('src/pages/keywords-select/index.html');
+
+    // todo close
+    mainWindow.webContents.openDevTools();
 
     return mainWindow;
 }

@@ -1,17 +1,74 @@
+const $ = require("jquery")
+
+const firebaseUrl = 'https://id-toolbox-default-rtdb.europe-west1.firebasedatabase.app/keywrods.json';
+
+let keywordsApi
+
+async function fetchData(url) {
+    try {
+        const response = await fetch(url);
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+// 从 firebase 获取关键词列表
+fetchData(firebaseUrl).then(data => {
+    if (data) {
+        keywordsApi = data.api
+
+        let sheetNames = data.sheetNames
+
+        let optionsHtml = `<option value="" selected>--</option>`
+        for (let i = 0; i < sheetNames.length; i++) {
+            if (!sheetNames[i]) {
+                continue;
+            }
+            optionsHtml += `<option value="${sheetNames[i]}">${sheetNames[i]}</option>`
+        }
+
+        document.getElementById("keywords-select").innerHTML = optionsHtml
+    }
+});
+
+// 从 Google 表格加载关键词
+$('#keywords-select').on('change', function () {
+
+    let value = $(this).val();
+
+    // 过滤 value 为空
+    if (!value) {
+        $("#keywords").val("")
+        return;
+    }
+
+    $("#keywords").val("关键词加载中...")
+
+    let googleApi = keywordsApi + "?type=" + value
+    fetchData(googleApi).then(data => {
+        let keywords = ""
+
+        for (const i in data) {
+            if (data[i]) {
+                keywords += data[i] + "\n"
+            }
+        }
+
+        $("#keywords").val(keywords)
+    })
+});
+
 function performQuery() {
     var outputText = document.getElementById('outputText');
     outputText.value = '处理中...';
 
     var inputAll = document.getElementById('inputText').value;
-    var inputRemove = document.getElementById('inputTextRemove').value;
+    var keywords = document.getElementById('keywords').value;
 
-    var result = queryFunction(inputAll, inputRemove);
+    var result = queryFunction(inputAll, keywords);
 
-    updateOutput(result);
-}
-
-function updateOutput(output) {
-    document.getElementById('outputText').value = output;
+    document.getElementById('outputText').value = result;
 }
 
 function copyOutput() {
@@ -25,22 +82,40 @@ function clearInputAndOutput() {
     outputText.value = '';
 
     var inputText = document.getElementById('inputText');
-    outputText.value = '';
-
-    var inputText2 = document.getElementById('inputTextRemove');
-    inputText2.value = '';
+    inputText.value = '';
 }
 
-function queryFunction(inputAll, inputRemove) {
+// 挑选关键词
+function queryFunction(input, keywords) {
 
-    let linesAll = inputAll.replace(/ +/g, '').split(/\r?\n/);
-    let linesRemove = inputRemove.replace(/ +/g, '').split(/\r?\n/);
+    let lines = input.split(/\r?\n/);
+    keywords = keywords.split(/\r?\n/);
 
-    let result = arrayDifference(linesAll, linesRemove);
+    let result = [];
+
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i];
+
+        let regexString = keywords.filter(keyword => keyword != "").map(keyword => escapeRegExp(keyword)).join('|');
+
+        let regex = new RegExp('(' + regexString + ')');
+
+        if (!regex.test(line)) {
+            continue;
+        }
+
+        result.push(line);
+    }
+
+    if (result.length === 0) {
+        return "无匹配行";
+    }
 
     return result.join("\n");
 }
 
-function arrayDifference(arr1, arr2) {
-    return arr1.filter(element => !arr2.includes(element));
+// 转义正则表达式中特殊字符的函数
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& 表示匹配到的子字符串
 }
+
