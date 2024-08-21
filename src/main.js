@@ -92,11 +92,11 @@ function createWindow() {
     });
 
 
-    // mainWindow.loadFile('src/pages/friend-ids/index.html');
-    mainWindow.loadFile('src/pages/keywords-select/index.html');
+    mainWindow.loadFile('src/pages/friend-ids/index.html');
+    // mainWindow.loadFile('src/pages/keywords-select/index.html');
 
     // todo close
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     return mainWindow;
 }
