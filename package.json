@@ -5,7 +5,7 @@
   "main": "main.js",
   "author": "Josef Kuba",
   "scripts": {
-    "start": "electron .",
+    "start": "nodemon --watch src --exec electron .",
     "build:mac": "electron-builder --mac",
     "build:win": "electron-builder --win",
     "evd": "evd"
@@ -38,7 +38,6 @@
     "download": "^8.0.0",
     "electron": "^31.3.1",
     "electron-builder": "^24.13.3",
-    "electron-reload": "^2.0.0-alpha.1",
     "esno": "^0.16.3",
     "jsdom": "^22.1.0",
     "log-symbols": "=4.1.0",
@@ -52,6 +51,7 @@
     "bootstrap": "^5.3.3",
     "electron-version-deployer-cli": "^0.1.6",
     "fs-extra": "^11.2.0",
+    "nodemon": "^3.1.4",
     "unzipper": "^0.12.3"
   }
 }

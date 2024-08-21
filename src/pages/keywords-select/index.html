@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <title>Square Calculator</title>
+    <style>
+        /* 自定义样式，可以根据需要调整 */
+        .input-textarea {
+            float: left;
+            width: 40%;
+            margin-right: 10px;
+        }
+
+        .output-textarea {
+            float: right;
+            width: 40%;
+            margin-left: 10px;
+        }
+
+        .center-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            /* 垂直排列 */
+            justify-content: center;
+            height: 100%;
+        }
+
+        footer {
+            height: 30px;
+            /* 设置页脚高度 */
+            background-color: #333;
+            /* 设置背景色 */
+            color: #fff;
+            /* 设置文字颜色 */
+            text-align: center;
+            /* 文字居中 */
+            line-height: 30px;
+            /* 设置行高，保证文字在垂直方向居中 */
+            position: fixed;
+            /* 固定在页面底部 */
+            bottom: 0;
+            /* 距离页面底部距离 */
+            width: 100%;
+            /* 宽度100%，与页面同宽 */
+        }
+    </style>
+
+    <link href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 style="text-align:center">ID 比较工具</h1>
+        <p>有时会遇到这样的场景：需要从许多ID中，删除掉一部分ID。这个工具可以方便的处理这个问题</p>
+
+        <div class="row">
+            <div class="col-md-6 text-left">
+                <p class="text-left">使用说明 👉 <a
+                        href="https://docs.google.com/document/d/1Nuw4HVIbYaBn4Jt_oWYoYKIqLovccjM6WwlrXWnHjSI/edit?usp=sharing"
+                        target="_black">链接</a></p>
+            </div>
+            <div class="col-md-6 text-right">
+                <p class="text-right">问题反馈 👉 <a
+                        href="https://docs.google.com/spreadsheets/d/1DSqhoY1uVN3Kq0x73e_BZz4EQ6Kte8b2tL7_YLKVDbo/edit?gid=1998303978#gid=1998303978"
+                        target="_black">链接</a></p>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-3">
+                <textarea id="inputText" class="form-control input-textarea" style="height: 350px;"
+                    placeholder="所有ID"></textarea>
+            </div>
+
+            <div class="col-md-3">
+                <textarea id="inputTextRemove" class="form-control input-textarea" style="height: 350px;"
+                    placeholder="要删除的ID"></textarea>
+            </div>
+
+            <div class="col-md-2">
+                <div class="button-group h-100 d-flex flex-column justify-content-center">
+                    <button class="btn btn-primary mb-2" onclick="performQuery()">移除</button>
+                    <button class="btn btn-success mb-2" onclick="copyOutput()">复制</button>
+                    <button class="btn btn-danger" onclick="clearInputAndOutput()">清空</button>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <textarea id="outputText" class="form-control output-textarea" style="height: 350px;" readonly
+                    placeholder="结果将展示在这里"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <footer> version : 1.0.0 </footer>
+
+    <script src="./index.js"></script>
+</body>
+
+</html>

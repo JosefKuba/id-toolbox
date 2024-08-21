@@ -1,5 +1,5 @@
-const path        = require('path');
-const { app }     = require('electron');
+const path = require('path');
+const { app } = require('electron');
 const { EVDInit } = require("electron-version-deployer-cli/dist/main");
 
 EVDInit({

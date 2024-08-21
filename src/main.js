@@ -4,14 +4,9 @@ const path = require('path');
 const axios = require('axios');
 const unzipper = require('unzipper');
 
-const {configFile, friendIdDir, downloadDir } = require("./packages/const")
-require("./packages/update")
+const { configFile, friendIdDir, downloadDir } = require("./packages/const")
+require("./packages/upgrade")
 require("./packages/get-friend-id")
-
-// 自动重载应用
-// require('electron-reload')(__dirname, {
-//     electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
-// });
 
 let mainWindow;
 
@@ -55,6 +50,12 @@ const menuTemplate = [
                 label: '匹配中文名称',
                 click: () => {
                     mainWindow.loadFile('src/pages/chinese-names/index.html');
+                }
+            },
+            {
+                label: '关键词过滤',
+                click: () => {
+                    mainWindow.loadFile('src/pages/keywords-select/index.html');
                 }
             }
         ]
