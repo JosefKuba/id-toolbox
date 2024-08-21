@@ -53,7 +53,7 @@ const menuTemplate = [
                 }
             },
             {
-                label: '关键词过滤',
+                label: '关键词匹配工具',
                 click: () => {
                     mainWindow.loadFile('src/pages/keywords-select/index.html');
                 }
