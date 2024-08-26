@@ -1,20 +1,31 @@
-const { app, BrowserWindow, Menu, shell } = require('electron');
+const { app, BrowserWindow, Menu, shell, ipcMain } = require('electron');
 const fs = require('fs-extra');
 const path = require('path');
 const axios = require('axios');
 const unzipper = require('unzipper');
+const packageJson = require('./../package.json'); // 引入 package.json 以获取版本号
 
 const { configFile, friendIdDir, downloadDir } = require("./packages/const")
 require("./packages/upgrade")
 require("./packages/get-friend-id")
 
 let mainWindow;
+let settingsWindow;
+
+// 远程配置的文件地址，给一个默认配置
+let remoteUrl = JSON.parse(fs.readFileSync(configFile)).remoteUrl || ""
 
 // 定义菜单
 const menuTemplate = [
     {
-        label: '文件',
+        label: '文件', 
         submenu: [
+            {
+                label: '设置',
+                click() {
+                    openSettingsWindow();
+                }
+            },
             {
                 label: '退出',
                 role: 'quit'
@@ -74,15 +85,23 @@ const menuTemplate = [
                 click: () => {
                     shell.openExternal("https://docs.google.com/spreadsheets/d/1DSqhoY1uVN3Kq0x73e_BZz4EQ6Kte8b2tL7_YLKVDbo/edit?gid=1236144827");
                 }
+            },
+            {
+                label: '开发者工具',
+                // accelerator: 'CmdOrCtrl+I',  // 使用快捷键 CmdOrCtrl+I 打开开发者工具
+                click: () => {
+                    mainWindow.webContents.openDevTools(); // 打开开发者工具
+                }
             }
         ]
     }
 ];
 
-function createWindow() {
+function createMainWindow() {
     const mainWindow = new BrowserWindow({
         width: 800,
         height: 680,
+        title: `${packageJson.build.productName} - v${packageJson.version}`,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true,
@@ -93,7 +112,6 @@ function createWindow() {
 
 
     mainWindow.loadFile('src/pages/friend-ids/index.html');
-    // mainWindow.loadFile('src/pages/keywords-select/index.html');
 
     // todo close
     // mainWindow.webContents.openDevTools();
@@ -101,19 +119,92 @@ function createWindow() {
     return mainWindow;
 }
 
+function createSettingsWindow() {
+    settingsWindow = new BrowserWindow({
+        width: 400,
+        height: 300,
+        resizable: false,       // 禁用窗口大小调整（去掉最大化按钮）
+        minimizable: false,     // 禁用最小化按钮
+        maximizable: false,     // 禁用最大化按钮
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            nodeIntegration: true,
+            contextIsolation: false
+        },
+        icon: path.join(__dirname, 'src/assets/icons/png/64x64.png')
+    });
+
+    settingsWindow.loadFile('src/pages/settings.html');
+
+    settingsWindow.setMenu(null);
+
+    settingsWindow.on('closed', () => {
+        settingsWindow = null;
+    });
+}
+
+// 监听渲染进程请求获取远程配置 URL
+ipcMain.handle('get-remote-url', () => {
+    const config = JSON.parse(fs.readFileSync(configFile))
+    return config.remoteUrl || ""
+});
+
+// 监听渲染进程请求保存远程配置 URL
+ipcMain.on('save-remote-url', (event, url) => {
+    try {
+        const config = JSON.parse(fs.readFileSync(configFile))
+        const remoteUrl = config.remoteUrl || ""
+        if (url !== remoteUrl) {
+            config.remoteUrl = url
+            fs.writeFileSync(configFile, JSON.stringify(config), "utf-8")
+
+            app.relaunch(); // 重新启动应用
+            app.quit(); // 退出应用
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
+    // 保存成功后，关闭窗口
+    event.sender.send('close-settings-window');
+});
+
+// 关闭设置窗口的函数
+ipcMain.on('close-settings-window', () => {
+    if (settingsWindow) {
+        settingsWindow.close();
+        settingsWindow = null;
+    }
+});
+
+// 打开设置窗口的函数（可以从菜单或按钮中调用）
+function openSettingsWindow() {
+    if (!settingsWindow) {
+        createSettingsWindow();
+    } else {
+        settingsWindow.focus();
+    }
+}
+
 app.whenReady().then(() => {
 
-    mainWindow = createWindow();
+    mainWindow = createMainWindow();
 
     const menu = Menu.buildFromTemplate(menuTemplate);
     Menu.setApplicationMenu(menu);
 
     app.on('activate', function () {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow();
+        if (BrowserWindow.getAllWindows().length === 0) createMainWindow();
     });
 
     // 获取数据链接
-    const url = 'https://id-toolbox-default-rtdb.europe-west1.firebasedatabase.app/friendId.json';
+    if (!remoteUrl) {
+        console.log("remote: ", remoteUrl)
+        mainWindow.webContents.send("id-update", "缺少配置链接");
+        return;
+    }
+
+    const url = remoteUrl + '/friendId.json';
 
     mainWindow.webContents.send("id-update", "检查更新中...");
 
@@ -224,7 +315,7 @@ app.whenReady().then(() => {
                 });
         }).catch(error => {
             console.error('Error: ' + error.message);
-            mainWindow.webContents.send("id-update", "检查更新失败");
+            mainWindow.webContents.send("id-update", "检查更新失败. 请确保配置链接正确填写");
         });
 });
 

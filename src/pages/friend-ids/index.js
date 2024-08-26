@@ -15,7 +15,7 @@ ipcRenderer.on('file-content', (event, fileContent) => {
     document.getElementById('outputText').value = fileContent;
 });
 
-// 检查更新
+// 更新软件状态
 ipcRenderer.on('id-update', (event, content) => {
     document.getElementById('sf-status').innerText = content;
 });

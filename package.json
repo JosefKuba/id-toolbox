@@ -1,6 +1,6 @@
 {
   "name": "id-toolbox",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "ID库工具箱",
   "main": "main.js",
   "author": "Josef Kuba",
@@ -51,7 +51,6 @@
     "bootstrap": "^5.3.3",
     "electron-version-deployer-cli": "^0.1.6",
     "fs-extra": "^11.2.0",
-    "jquery": "^3.7.1",
     "nodemon": "^3.1.4",
     "unzipper": "^0.12.3"
   }
