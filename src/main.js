@@ -1,120 +1,64 @@
-const { app, BrowserWindow, Menu, shell, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu } = require('electron');
 const fs = require('fs-extra');
 const path = require('path');
 const axios = require('axios');
 const unzipper = require('unzipper');
-const packageJson = require('./../package.json'); // 引入 package.json 以获取版本号
+const { EVDInit } = require("electron-version-deployer-cli/dist/main");
+const {menuTemplate} = require("./packages/menu");
 
-const { configFile, friendIdDir, downloadDir } = require("./packages/const")
-require("./packages/upgrade")
-require("./packages/get-friend-id")
+EVDInit({
+    remoteUrl: "https://id-toolbox.pages.dev",
+    logo: `file://${path.join(
+        app.getAppPath(),
+        "src",
+        "assets",
+        "icons",
+        "icon.png"
+    )}`,
+    onError(error) {
+        //  记录更新检测遇到的错误
+        // writeError(error, "evd");
+        console.log("check update error...")
+        console.log(error)
+    },
+});
 
-let mainWindow;
-let settingsWindow;
+let mainWindow, settingsWindow;
+
+// 定义配置文件
+const configFile = path.join(app.getPath('userData'), 'config.json');
+if (!fs.existsSync(configFile)) {
+    fs.writeFileSync(configFile, JSON.stringify({ friendGoogleId: "", friendGoogleDate: "" }), 'utf-8');
+}
 
 // 远程配置的文件地址，给一个默认配置
 let remoteUrl = JSON.parse(fs.readFileSync(configFile)).remoteUrl || ""
 
-// 定义菜单
-const menuTemplate = [
-    {
-        label: '文件', 
-        submenu: [
-            {
-                label: '设置',
-                click() {
-                    openSettingsWindow();
-                }
-            },
-            {
-                label: '退出',
-                role: 'quit'
-            }
-        ]
-    },
-    {
-        label: '编辑',
-        submenu: [
-            { role: 'cut', label: '剪切' },
-            { role: 'copy', label: '复制' },
-            { role: 'paste', label: '粘贴' },
-            { role: 'delete', label: '删除' },
-            { role: 'selectAll', label: '全选' }
-        ]
-    },
-    {
-        label: '功能',
-        submenu: [
-            {
-                label: '好友ID查询',
-                click: () => {
-                    mainWindow.loadFile('src/pages/friend-ids/index.html');
-                }
-            },
-            {
-                label: 'ID比较工具',
-                click: () => {
-                    mainWindow.loadFile('src/pages/id-compare/index.html');
-                }
-            },
-            {
-                label: '匹配中文名称',
-                click: () => {
-                    mainWindow.loadFile('src/pages/chinese-names/index.html');
-                }
-            },
-            {
-                label: '关键词匹配工具',
-                click: () => {
-                    mainWindow.loadFile('src/pages/keywords-select/index.html');
-                }
-            }
-        ]
-    },
-    {
-        label: '帮助',
-        submenu: [
-            {
-                label: '使用说明',
-                click: () => {
-                    shell.openExternal("https://docs.google.com/document/d/1ssxfJXgi2wnVs9peMa2u2pzwgSOHVZRQ4C7UBuNx7r4/edit");
-                }
-            },
-            {
-                label: '问题反馈',
-                click: () => {
-                    shell.openExternal("https://docs.google.com/spreadsheets/d/1DSqhoY1uVN3Kq0x73e_BZz4EQ6Kte8b2tL7_YLKVDbo/edit?gid=1236144827");
-                }
-            },
-            {
-                label: '开发者工具',
-                // accelerator: 'CmdOrCtrl+I',  // 使用快捷键 CmdOrCtrl+I 打开开发者工具
-                click: () => {
-                    mainWindow.webContents.openDevTools(); // 打开开发者工具
-                }
-            }
-        ]
-    }
-];
+// 定义存放ID文件的目录
+const friendIdDir = path.join(app.getPath('userData'), 'friends');
+if (!fs.existsSync(friendIdDir)) {
+    fs.mkdirSync(friendIdDir);
+}
 
-function createMainWindow() {
+// 定义下载文件的目录
+const downloadDir = path.join(app.getPath('userData'), 'download');
+if (!fs.existsSync(downloadDir)) {
+    fs.mkdirSync(downloadDir);
+}
+
+function createWindow() {
     const mainWindow = new BrowserWindow({
         width: 800,
         height: 680,
-        title: `${packageJson.build.productName} - v${packageJson.version}`,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
+            // preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true,
             contextIsolation: false,
         },
         icon: path.join(__dirname, 'src/assets/icons/png/64x64.png')
     });
 
-
     mainWindow.loadFile('src/pages/friend-ids/index.html');
-
-    // todo close
-    // mainWindow.webContents.openDevTools();
 
     return mainWindow;
 }
@@ -127,7 +71,7 @@ function createSettingsWindow() {
         minimizable: false,     // 禁用最小化按钮
         maximizable: false,     // 禁用最大化按钮
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
+            // preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true,
             contextIsolation: false
         },
@@ -188,13 +132,13 @@ function openSettingsWindow() {
 
 app.whenReady().then(() => {
 
-    mainWindow = createMainWindow();
+    mainWindow = createWindow();
 
-    const menu = Menu.buildFromTemplate(menuTemplate);
+    const menu = Menu.buildFromTemplate(menuTemplate({mainWindow, openSettingsWindow}));
     Menu.setApplicationMenu(menu);
 
     app.on('activate', function () {
-        if (BrowserWindow.getAllWindows().length === 0) createMainWindow();
+        if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
 
     // 获取数据链接
@@ -319,8 +263,50 @@ app.whenReady().then(() => {
         });
 });
 
+
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') app.quit();
 });
 
+
+ipcMain.on('read-file', async (event, idContent) => {
+
+    let ids = idContent.split(/\r?\n/);
+
+    let idStr = "";
+    for (let i = 0; i < ids.length; i++) {
+        let id = ids[i].trim();
+
+        // 过滤掉没有分隔符的行
+        if (id.length === 0) {
+            continue;
+        }
+
+        let filePath = friendIdDir + "/" + id;
+
+        try {
+            let fileContent = fs.readFileSync(friendIdDir + "/" + id, 'utf-8');
+            if (fileContent) {
+                idStr += fileContent + "\n";
+            }
+        } catch (err) {
+            idStr = id + "\t不存在\n" + idStr
+        }
+    }
+
+    // 去重
+    let uniqueArr = [...new Set(idStr.split(/\r?\n/))];
+
+    // 移除空
+    uniqueArr = uniqueArr.filter(Boolean)
+
+    let result;
+    if (uniqueArr.length == 0) {
+        result = "无结果"
+    } else {
+        result = uniqueArr.join("\n")
+    }
+
+    event.sender.send('file-content', result);
+});
 

@@ -2,3 +2,4 @@ node_modules/
 dist/
 yarn.lock
 _dev/
+src_old/
