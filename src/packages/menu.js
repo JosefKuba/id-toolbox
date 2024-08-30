@@ -56,6 +56,12 @@ const menuTemplate = function (param) {
                     click: () => {
                         mainWindow.loadFile('src/pages/keywords-select/index.html');
                     }
+                },
+                {
+                    label: '提取RC ID',
+                    click: () => {
+                        mainWindow.loadFile('src/pages/rc-unzip/index.html');
+                    }
                 }
             ]
         },

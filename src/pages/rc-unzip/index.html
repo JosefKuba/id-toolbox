@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <style>
+        /* 自定义样式，可以根据需要调整 */
+        .input-textarea {
+            float: left;
+            width: 40%;
+            /* 调整左浮动 textarea 的宽度 */
+            margin-right: 10px;
+        }
+
+        .output-textarea {
+            float: right;
+            width: 40%;
+            /* 调整右浮动 textarea 的宽度 */
+            margin-left: 10px;
+        }
+
+        .center-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            /* 垂直排列 */
+            justify-content: center;
+            height: 100%;
+        }
+
+        footer {
+            height: 30px;
+            /* 设置页脚高度 */
+            background-color: #333;
+            /* 设置背景色 */
+            color: #fff;
+            /* 设置文字颜色 */
+            text-align: center;
+            /* 文字居中 */
+            line-height: 30px;
+            /* 设置行高，保证文字在垂直方向居中 */
+            position: fixed;
+            /* 固定在页面底部 */
+            bottom: 0;
+            /* 距离页面底部距离 */
+            width: 100%;
+            /* 宽度100%，与页面同宽 */
+        }
+    </style>
+
+    <link href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 style="text-align:center">提取RC ID</h1>
+        <p>将RC库下载为 csv 文件，即可取出文件中的ID</p>
+
+        <div class="row">
+            <div class="col-md-5">
+                <!-- 文件输入区域，支持拖拽 -->
+                <div id="fileDropArea" class="form-control input-textarea" style="height: 350px; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc;">
+                    <input type="file" id="fileInput" style="display: none;" accept=".txt, .csv, .tsv, text/csv, text/tsv, text/tab-separated-values" />
+                    <p id="fileDropText">拖拽 csv 文件到这里或点击选择文件</p>
+                </div>
+            </div>
+        
+            <div class="col-md-2">
+                <div class="button-group h-100 d-flex flex-column justify-content-center">
+                    <button class="btn btn-primary mb-2" onclick="displayFileContent()">提取ID</button>
+                    <button class="btn btn-success mb-2" onclick="copyOutputID()" title="请确保ID位于第一列">复制</button>
+                    <button class="btn btn-danger" onclick="clearInputAndOutput()">清空</button>
+                </div>
+            </div>
+        
+            <div class="col-md-5">
+                <textarea id="outputText" class="form-control output-textarea" style="height: 350px;" readonly placeholder="结果将展示在这里"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <footer> 状态 : <span id="sf-status">就绪</span> </footer>
+
+    <script>
+        let fileContent = ''; // 存储文件内容
+    
+        // 设置拖拽功能
+        const dropArea = document.getElementById('fileDropArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileDropText = document.getElementById('fileDropText');
+    
+        // 点击文件区域时触发文件选择
+        dropArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+    
+        // 处理文件选择
+        fileInput.addEventListener('change', (event) => {
+            handleFile(event.target.files[0]);
+        });
+    
+        // 处理拖拽进入
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault(); // 防止默认行为（打开文件）
+            dropArea.style.borderColor = '#007bff';
+        });
+    
+        // 处理拖拽离开
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.style.borderColor = '#ccc';
+        });
+    
+        // 处理文件拖拽释放
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault(); // 防止默认行为
+            dropArea.style.borderColor = '#ccc';
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+    
+        // 处理文件读取
+        function handleFile(file) {
+            // 确保是文本文件、CSV 或者 TSV 文件
+            const validTypes = ['text/plain', 'text/csv', 'text/tsv', 'text/tab-separated-values'];
+
+            if (file && validTypes.includes(file.type)) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    fileContent = event.target.result; // 将文件内容保存到变量中
+                    fileDropText.textContent = `已选择文件: ${file.name}`;
+                };
+                reader.readAsText(file);
+            } else {
+                alert('请上传一个文本文件 (.txt) 或者 CSV (.csv) 文件');
+            }
+        }
+    
+        // 显示文件内容到右侧文本框
+        function displayFileContent() {
+            if (fileContent) {
+                // 使用正则表达式提取连续5位以上的数字
+                const matches = fileContent.match(/\d{5,}/g);
+                
+                if (matches) {
+                    // 将匹配结果逐行显示
+                    document.getElementById('outputText').value = matches.join('\n');
+                } else {
+                    document.getElementById('outputText').value = '没有提取到ID';
+                }
+            } else {
+                alert('请先选择一个文件');
+            }
+        }
+    
+        // 复制结果函数
+        function copyOutputID() {
+            const outputText = document.getElementById('outputText');
+            outputText.select(); // 选中文本
+            document.execCommand('copy'); // 执行复制
+        }
+    
+        // 清空输入和输出函数
+        function clearInputAndOutput() {
+            fileContent = ''; // 清空文件内容
+            document.getElementById('outputText').value = ''; // 清空输出框
+            document.getElementById('fileInput').value = ''; // 清空文件输入
+            document.getElementById('fileDropText').textContent = '拖拽 csv 文件到这里或点击选择文件'; // 重置文件选择区域文本
+        }
+    </script>
+    
+    <style>
+        #fileDropArea {
+            cursor: pointer;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+    </style>
+</body>
+
+</html>
+
