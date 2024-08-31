@@ -62,6 +62,12 @@ const menuTemplate = function (param) {
                     click: () => {
                         mainWindow.loadFile('src/pages/rc-unzip/index.html');
                     }
+                },
+                {
+                    label: 'ID 打包/解包',
+                    click: () => {
+                        mainWindow.loadFile('src/pages/id-package/index.html');
+                    }
                 }
             ]
         },

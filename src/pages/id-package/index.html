@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <style>
+        /* 自定义样式，可以根据需要调整 */
+        .input-textarea {
+            float: left;
+            width: 40%;
+            /* 调整左浮动 textarea 的宽度 */
+            margin-right: 10px;
+        }
+
+        .output-textarea {
+            float: right;
+            width: 40%;
+            /* 调整右浮动 textarea 的宽度 */
+            margin-left: 10px;
+        }
+
+        .center-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            /* 垂直排列 */
+            justify-content: center;
+            height: 100%;
+        }
+
+        footer {
+            height: 30px;
+            /* 设置页脚高度 */
+            background-color: #333;
+            /* 设置背景色 */
+            color: #fff;
+            /* 设置文字颜色 */
+            text-align: center;
+            /* 文字居中 */
+            line-height: 30px;
+            /* 设置行高，保证文字在垂直方向居中 */
+            position: fixed;
+            /* 固定在页面底部 */
+            bottom: 0;
+            /* 距离页面底部距离 */
+            width: 100%;
+            /* 宽度100%，与页面同宽 */
+        }
+    </style>
+
+    <link href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 style="text-align:center">ID 压缩 / 解压</h1>
+
+        <!-- <p>在左侧输入一个或者多个ID，点击查询按钮，右侧可以出现对应的好友ID。</p> -->
+
+        <div class="row mt-4">
+            <div class="col-md-5">
+                <textarea id="inputText" class="form-control input-textarea" style="height: 350px;"
+                    placeholder="100000257231664"></textarea>
+            </div>
+
+            <div class="col-md-2">
+                <div class="button-group h-100 d-flex flex-column justify-content-center">
+                    <button id="id-zip" class="btn btn-primary mb-2" onclick="zip()">压缩</button>
+                    <button id="id-unzip" class="btn btn-primary mb-2" onclick="unzip()">解压</button>
+                    <button class="btn btn-success mb-2" onclick="copyOutput()">复制</button>
+                    <button class="btn btn-danger" onclick="clearInputAndOutput()">清空</button>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <textarea id="outputText" class="form-control output-textarea" style="height: 350px;" readonly
+                    placeholder="结果将展示在这里"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <footer> 状态 : <span id="sf-status">就绪</span> </footer>
+
+    <script>
+
+    function zip () {
+        // 1. 获取输入框内容，按行分割成数组
+        let inputText = document.getElementById('inputText').value.trim();
+        let ids = inputText.split('\n').filter(line => line.trim() !== ''); // 去掉空行
+
+        // 2. 初始化压缩结果数组
+        let compressedResult = [];
+        
+        // 3. 每 2000 个 ID 作为一组进行压缩
+        let packageCount = 2000;
+        for (let i = 0; i < ids.length; i += packageCount) {
+            let idGroup = ids.slice(i, i + packageCount); // 取 2000 个一组
+            compressedResult.push('/' + idGroup.join('/') + '/'); // 用 '/' 连接
+        }
+
+        // 4. 将压缩后的结果输出到右侧的输出框中
+        updateOutput(compressedResult.join('\n'))
+    }
+
+    function unzip () {
+        // 1. 获取输入框中的压缩内容
+        let inputText = document.getElementById('inputText').value.trim();
+        
+        // 2. 按照行分割，获取所有压缩的行
+        let compressedLines = inputText.split('\n').filter(line => line.trim() !== ''); // 去除空行
+
+        let uncompressedSet = new Set();
+
+        // 4. 遍历每一行，按 '/' 分割每一行，获取其中的每个 ID 并去重
+        compressedLines.forEach(line => {
+            let ids = line.split('/'); // 使用 '/' 进行分割
+            ids.forEach(id => uncompressedSet.add(id)); // 添加到 Set 中，自动去重
+        });
+
+        // 5. 将解压后的结果输出到右侧的输出框，每个 ID 一行
+        updateOutput(Array.from(uncompressedSet).filter(line => line.trim() !== '').join('\n'))
+    }
+
+    function updateOutput(output) {
+        document.getElementById('outputText').value = output;
+    }
+
+    function copyOutput() {
+        var outputText = document.getElementById('outputText');
+        outputText.select();
+        document.execCommand('copy');
+    }
+
+    function clearOutput() {
+        var outputText = document.getElementById('outputText');
+        outputText.value = '';
+    }
+
+    function clearInputAndOutput() {
+        var outputText = document.getElementById('outputText');
+        outputText.value = '';
+
+        var inputText = document.getElementById('inputText');
+        inputText.value = '';
+    }
+
+    </script>
+</body>
+
+</html>
