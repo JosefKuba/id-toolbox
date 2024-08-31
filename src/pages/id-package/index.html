@@ -62,12 +62,12 @@
     <div class="container mt-5">
         <h1 style="text-align:center">ID 压缩 / 解压</h1>
 
-        <!-- <p>在左侧输入一个或者多个ID，点击查询按钮，右侧可以出现对应的好友ID。</p> -->
+        <p>结果：<span id="zip-result"></span></p>
 
         <div class="row mt-4">
             <div class="col-md-5">
                 <textarea id="inputText" class="form-control input-textarea" style="height: 350px;"
-                    placeholder="100000257231664"></textarea>
+                    placeholder="放入要压缩的id或者压缩好的id包"></textarea>
             </div>
 
             <div class="col-md-2">
@@ -81,7 +81,7 @@
 
             <div class="col-md-5">
                 <textarea id="outputText" class="form-control output-textarea" style="height: 350px;" readonly
-                    placeholder="结果将展示在这里"></textarea>
+                    placeholder="压缩或解压的结果将展示在这里"></textarea>
             </div>
         </div>
     </div>
@@ -107,6 +107,8 @@
 
         // 4. 将压缩后的结果输出到右侧的输出框中
         updateOutput(compressedResult.join('\n'))
+
+        document.getElementById("zip-result").innerText = `ID 共 ${ids.length} 个，压缩出 ${compressedResult.length} 个包`;
     }
 
     function unzip () {
@@ -125,7 +127,10 @@
         });
 
         // 5. 将解压后的结果输出到右侧的输出框，每个 ID 一行
-        updateOutput(Array.from(uncompressedSet).filter(line => line.trim() !== '').join('\n'))
+        let resultArr = Array.from(uncompressedSet).filter(line => line.trim() !== '')
+        updateOutput(resultArr.join('\n'))
+    
+        document.getElementById("zip-result").innerText = `压缩出 共 ${compressedLines.length} 个，解压出不重复ID ${resultArr.length} 个包`;
     }
 
     function updateOutput(output) {
@@ -149,6 +154,8 @@
 
         var inputText = document.getElementById('inputText');
         inputText.value = '';
+
+        document.getElementById("zip-result").innerText = ''
     }
 
     </script>

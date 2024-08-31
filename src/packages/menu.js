@@ -64,7 +64,7 @@ const menuTemplate = function (param) {
                     }
                 },
                 {
-                    label: 'ID 打包/解包',
+                    label: 'ID 压缩 解压',
                     click: () => {
                         mainWindow.loadFile('src/pages/id-package/index.html');
                     }
