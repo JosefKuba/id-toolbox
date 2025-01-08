@@ -1,0 +1,70 @@
+<!-- settings.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>设置</title>
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- <h1 class="mb-4">设置</h1> -->
+
+        <form id="settings-form">
+            <div class="row align-items-center mb-3">
+                <div class="col-auto">
+                    <label for="remote-url" class="col-form-label">配置链接:</label>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" id="remote-url" placeholder="请输入 firebase 链接">
+                </div>
+            </div>
+            <div id="error-message" class="text-danger mt-2" style="display: none;">无效的网址，请检查后重新填写</div>
+
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-primary btn-sm mt-4" id="save-btn">保存</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        // Load the saved remote URL when the page loads
+        ipcRenderer.invoke('get-remote-url').then((url) => {
+            document.getElementById('remote-url').value = url || '';
+        });
+
+         // URL 校验函数
+         function validateURL(url) {
+            // 简单的 URL 格式验证 (可以根据需要更改正则表达式)
+            const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+            return urlPattern.test(url);
+        }
+
+        // Save the remote URL when the save button is clicked
+        document.getElementById('save-btn').addEventListener('click', () => {
+            const remoteUrl = document.getElementById('remote-url').value.trim();
+            const errorMessageElement = document.getElementById('error-message');
+
+             // 校验 URL
+             if (!validateURL(remoteUrl)) {
+                // 显示错误提示信息
+                errorMessageElement.style.display = 'block';
+            } else {
+                // 隐藏错误提示信息
+                errorMessageElement.style.display = 'none';
+                
+                // 发送保存请求
+                ipcRenderer.send('save-remote-url', remoteUrl);
+            }
+        });
+
+        // 监听主进程发送的关闭窗口消息，成功保存后关闭窗口
+        ipcRenderer.on('close-settings-window', () => {
+            ipcRenderer.send('close-settings-window'); // 请求主进程关闭窗口
+        });
+    </script>
+</body>
+</html>
