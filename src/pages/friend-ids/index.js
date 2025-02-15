@@ -1,4 +1,4 @@
-const { ipcRenderer } = require('electron');
+const {ipcRenderer} = require('electron');
 
 document.getElementById('query').addEventListener('click', () => {
     var outputText = document.getElementById('outputText');

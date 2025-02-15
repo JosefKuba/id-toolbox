@@ -59,45 +59,45 @@
 </head>
 
 <body>
-    <div class="container mt-5">
-        <h1 style="text-align:center">ID 压缩 / 解压</h1>
+<div class="container mt-5">
+    <h1 style="text-align:center">ID 压缩 / 解压</h1>
 
-        <p>结果：<span id="zip-result"></span></p>
+    <p>结果：<span id="zip-result"></span></p>
 
-        <div class="row mt-4">
-            <div class="col-md-5">
+    <div class="row mt-4">
+        <div class="col-md-5">
                 <textarea id="inputText" class="form-control input-textarea" style="height: 350px;"
-                    placeholder="放入要压缩的id或者压缩好的id包"></textarea>
-            </div>
+                          placeholder="放入要压缩的id或者压缩好的id包"></textarea>
+        </div>
 
-            <div class="col-md-2">
-                <div class="button-group h-100 d-flex flex-column justify-content-center">
-                    <button id="id-zip" class="btn btn-primary mb-2" onclick="zip()">压缩</button>
-                    <button id="id-unzip" class="btn btn-primary mb-2" onclick="unzip()">解压</button>
-                    <button class="btn btn-success mb-2" onclick="copyOutput()">复制</button>
-                    <button class="btn btn-danger" onclick="clearInputAndOutput()">清空</button>
-                </div>
-            </div>
-
-            <div class="col-md-5">
-                <textarea id="outputText" class="form-control output-textarea" style="height: 350px;" readonly
-                    placeholder="压缩或解压的结果将展示在这里"></textarea>
+        <div class="col-md-2">
+            <div class="button-group h-100 d-flex flex-column justify-content-center">
+                <button id="id-zip" class="btn btn-primary mb-2" onclick="zip()">压缩</button>
+                <button id="id-unzip" class="btn btn-primary mb-2" onclick="unzip()">解压</button>
+                <button class="btn btn-success mb-2" onclick="copyOutput()">复制</button>
+                <button class="btn btn-danger" onclick="clearInputAndOutput()">清空</button>
             </div>
         </div>
+
+        <div class="col-md-5">
+                <textarea id="outputText" class="form-control output-textarea" style="height: 350px;" readonly
+                          placeholder="压缩或解压的结果将展示在这里"></textarea>
+        </div>
     </div>
+</div>
 
-    <footer> 状态 : <span id="sf-status">就绪</span> </footer>
+<footer> 状态 : <span id="sf-status">就绪</span></footer>
 
-    <script>
+<script>
 
-    function zip () {
+    function zip() {
         // 1. 获取输入框内容，按行分割成数组
         let inputText = document.getElementById('inputText').value.trim();
         let ids = inputText.split('\n').filter(line => line.trim() !== ''); // 去掉空行
 
         // 2. 初始化压缩结果数组
         let compressedResult = [];
-        
+
         // 3. 每 2000 个 ID 作为一组进行压缩
         let packageCount = 2000;
         for (let i = 0; i < ids.length; i += packageCount) {
@@ -111,10 +111,10 @@
         document.getElementById("zip-result").innerText = `ID 共 ${ids.length} 个，压缩出 ${compressedResult.length} 个包`;
     }
 
-    function unzip () {
+    function unzip() {
         // 1. 获取输入框中的压缩内容
         let inputText = document.getElementById('inputText').value.trim();
-        
+
         // 2. 按照行分割，获取所有压缩的行
         let compressedLines = inputText.split('\n').filter(line => line.trim() !== ''); // 去除空行
 
@@ -129,7 +129,7 @@
         // 5. 将解压后的结果输出到右侧的输出框，每个 ID 一行
         let resultArr = Array.from(uncompressedSet).filter(line => line.trim() !== '')
         updateOutput(resultArr.join('\n'))
-    
+
         document.getElementById("zip-result").innerText = `压缩出 共 ${compressedLines.length} 个，解压出不重复ID ${resultArr.length} 个包`;
     }
 
@@ -158,7 +158,7 @@
         document.getElementById("zip-result").innerText = ''
     }
 
-    </script>
+</script>
 </body>
 
 </html>

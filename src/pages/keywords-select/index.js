@@ -1,13 +1,13 @@
-const { ipcRenderer } = require('electron');
+const {ipcRenderer} = require('electron');
 
- // Load the saved remote URL when the page loads
- ipcRenderer.invoke('get-remote-url').then((url) => {
+// Load the saved remote URL when the page loads
+ipcRenderer.invoke('get-remote-url').then((url) => {
     if (!url) {
         // document.getElementById('sf-status').innerText = "缺少配置链接";
         return;
     }
 
-    const firebaseUrl = url +  '/keywrods.json';
+    const firebaseUrl = url + '/keywrods.json';
 
     // console.log(firebaseUrl)
 
@@ -132,14 +132,14 @@ function queryFunction(input, keywords, selectMatch) {
             if (!regex.test(line)) {
                 continue;
             }
-    
+
             result.push(line);
         } else {
             if (!regex.test(line)) {
                 result.push(line);
             }
-    
-            continue;
+
+
         }
 
     }

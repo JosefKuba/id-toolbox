@@ -55,78 +55,79 @@
     </style>
 
     <link href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title></title>
 
 </head>
 
 <body>
-    <div class="container mt-5">
-        <h1 style="text-align:center">好友ID查询</h1>
+<div class="container mt-5">
+    <h1 style="text-align:center">好友ID查询</h1>
 
-        <p>在左侧输入一个或者多个ID，点击查询按钮，右侧可以出现对应的好友ID。</p>
+    <p>在左侧输入一个或者多个ID，点击查询按钮，右侧可以出现对应的好友ID。</p>
 
-        <div class="row">
-            <div class="col-md-6 text-left">
-                <p class="text-left">使用说明 👉 <a
-                        href="https://docs.google.com/document/d/1ssxfJXgi2wnVs9peMa2u2pzwgSOHVZRQ4C7UBuNx7r4/edit"
-                        target="_black">链接</a></p>
-            </div>
-            <div class="col-md-6 text-right">
-                <p class="text-right">问题反馈 👉 <a
-                        href="https://docs.google.com/spreadsheets/d/1DSqhoY1uVN3Kq0x73e_BZz4EQ6Kte8b2tL7_YLKVDbo/edit?gid=1236144827"
-                        target="_black">链接</a></p>
-            </div>
+    <div class="row">
+        <div class="col-md-6 text-left">
+            <p class="text-left">使用说明 👉 <a
+                    href="https://docs.google.com/document/d/1ssxfJXgi2wnVs9peMa2u2pzwgSOHVZRQ4C7UBuNx7r4/edit"
+                    target="_black">链接</a></p>
         </div>
-
-        <div class="row mt-4">
-            <div class="col-md-5">
-                <textarea id="inputText" class="form-control input-textarea" style="height: 350px;"
-                    placeholder="100000257231664"></textarea>
-            </div>
-
-            <div class="col-md-2">
-                <div class="button-group h-100 d-flex flex-column justify-content-center">
-                    <button id="query" class="btn btn-primary mb-2">查询</button>
-                    <button class="btn btn-success mb-2" onclick="copyOutput()">复制</button>
-                    <button class="btn btn-danger" onclick="clearInputAndOutput()">清空</button>
-                </div>
-            </div>
-
-            <div class="col-md-5">
-                <textarea id="outputText" class="form-control output-textarea" style="height: 350px;" readonly
-                    placeholder="结果将展示在这里"></textarea>
-            </div>
+        <div class="col-md-6 text-right">
+            <p class="text-right">问题反馈 👉 <a
+                    href="https://docs.google.com/spreadsheets/d/1DSqhoY1uVN3Kq0x73e_BZz4EQ6Kte8b2tL7_YLKVDbo/edit?gid=1236144827"
+                    target="_black">链接</a></p>
         </div>
     </div>
 
-    <footer> 状态 : <span id="sf-status">等待中</span> </footer>
+    <div class="row mt-4">
+        <div class="col-md-5">
+                <textarea id="inputText" class="form-control input-textarea" style="height: 350px;"
+                          placeholder="100000257231664"></textarea>
+        </div>
 
-    <script>
+        <div class="col-md-2">
+            <div class="button-group h-100 d-flex flex-column justify-content-center">
+                <button id="query" class="btn btn-primary mb-2">查询</button>
+                <button class="btn btn-success mb-2" onclick="copyOutput()">复制</button>
+                <button class="btn btn-danger" onclick="clearInputAndOutput()">清空</button>
+            </div>
+        </div>
 
-        function updateOutput(output) {
-            document.getElementById('outputText').value = output;
-        }
+        <div class="col-md-5">
+                <textarea id="outputText" class="form-control output-textarea" style="height: 350px;" readonly
+                          placeholder="结果将展示在这里"></textarea>
+        </div>
+    </div>
+</div>
 
-        function copyOutput() {
-            var outputText = document.getElementById('outputText');
-            outputText.select();
-            document.execCommand('copy');
-        }
+<footer> 状态 : <span id="sf-status">等待中</span></footer>
 
-        function clearOutput() {
-            var outputText = document.getElementById('outputText');
-            outputText.value = '';
-        }
+<script>
 
-        function clearInputAndOutput() {
-            var outputText = document.getElementById('outputText');
-            outputText.value = '';
+    function updateOutput(output) {
+        document.getElementById('outputText').value = output;
+    }
 
-            var inputText = document.getElementById('inputText');
-            inputText.value = '';
-        }
-    </script>
+    function copyOutput() {
+        var outputText = document.getElementById('outputText');
+        outputText.select();
+        document.execCommand('copy');
+    }
 
-    <script src="./index.js"></script>
+    function clearOutput() {
+        var outputText = document.getElementById('outputText');
+        outputText.value = '';
+    }
+
+    function clearInputAndOutput() {
+        var outputText = document.getElementById('outputText');
+        outputText.value = '';
+
+        var inputText = document.getElementById('inputText');
+        inputText.value = '';
+    }
+</script>
+
+<script src="./index.js"></script>
 </body>
 
 </html>

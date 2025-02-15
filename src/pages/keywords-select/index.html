@@ -55,59 +55,59 @@
 </head>
 
 <body>
-    <div class="container mt-5">
-        <h1 style="text-align:center">关键词匹配工具</h1>
-        <p>通过设置的关键词来挑选所需要的行</p>
+<div class="container mt-5">
+    <h1 style="text-align:center">关键词匹配工具</h1>
+    <p>通过设置的关键词来挑选所需要的行</p>
 
-        <!-- <div class="row">
-            <div class="col-md-6 text-left">
-                <p class="text-left">使用说明 👉 <a
-                        href="https://docs.google.com/document/d/1Nuw4HVIbYaBn4Jt_oWYoYKIqLovccjM6WwlrXWnHjSI/edit?usp=sharing"
-                        target="_black">链接</a></p>
-            </div>
-            <div class="col-md-6 text-right">
-                <p class="text-right">问题反馈 👉 <a
-                        href="https://docs.google.com/spreadsheets/d/1DSqhoY1uVN3Kq0x73e_BZz4EQ6Kte8b2tL7_YLKVDbo/edit?gid=1998303978#gid=1998303978"
-                        target="_black">链接</a></p>
-            </div>
-        </div> -->
+    <!-- <div class="row">
+        <div class="col-md-6 text-left">
+            <p class="text-left">使用说明 👉 <a
+                    href="https://docs.google.com/document/d/1Nuw4HVIbYaBn4Jt_oWYoYKIqLovccjM6WwlrXWnHjSI/edit?usp=sharing"
+                    target="_black">链接</a></p>
+        </div>
+        <div class="col-md-6 text-right">
+            <p class="text-right">问题反馈 👉 <a
+                    href="https://docs.google.com/spreadsheets/d/1DSqhoY1uVN3Kq0x73e_BZz4EQ6Kte8b2tL7_YLKVDbo/edit?gid=1998303978#gid=1998303978"
+                    target="_black">链接</a></p>
+        </div>
+    </div> -->
 
 
-        <div class="row">
-            <div class="col-md-3">
+    <div class="row">
+        <div class="col-md-3">
                 <textarea id="inputText" class="form-control input-textarea" style="height: 350px;"
-                    placeholder="要筛选的内容"></textarea>
-            </div>
+                          placeholder="要筛选的内容"></textarea>
+        </div>
 
-            <div class="col-md-3">
+        <div class="col-md-3">
                 <textarea id="keywords" class="form-control input-textarea" style="height: 350px;"
-                    placeholder="匹配关键词"></textarea>
-            </div>
+                          placeholder="匹配关键词"></textarea>
+        </div>
 
-            <div class="col-md-2">
-                <div class="button-group h-100 d-flex flex-column justify-content-center">
+        <div class="col-md-2">
+            <div class="button-group h-100 d-flex flex-column justify-content-center">
 
-                    <select id="keywords-select" class="form-select  mb-4" aria-label="Default select example">
-                        <!-- js 加载 -->
-                    </select>
+                <select id="keywords-select" class="form-select  mb-4" aria-label="Default select example">
+                    <!-- js 加载 -->
+                </select>
 
-                    <button class="btn btn-primary mb-2" onclick="performQuery(true)">筛选</button>
-                    <button class="btn btn-primary mb-2" onclick="performQuery(false)">反选</button>
-                    <button class="btn btn-success mb-2" onclick="copyOutput()">复制</button>
-                    <button class="btn btn-danger" onclick="clearInputAndOutput()">清空</button>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <textarea id="outputText" class="form-control output-textarea" style="height: 350px;" readonly
-                    placeholder="结果将展示在这里"></textarea>
+                <button class="btn btn-primary mb-2" onclick="performQuery(true)">筛选</button>
+                <button class="btn btn-primary mb-2" onclick="performQuery(false)">反选</button>
+                <button class="btn btn-success mb-2" onclick="copyOutput()">复制</button>
+                <button class="btn btn-danger" onclick="clearInputAndOutput()">清空</button>
             </div>
         </div>
+
+        <div class="col-md-4">
+                <textarea id="outputText" class="form-control output-textarea" style="height: 350px;" readonly
+                          placeholder="结果将展示在这里"></textarea>
+        </div>
     </div>
+</div>
 
-    <footer> 状态 : <span id="sf-status">就绪</span> </footer>
+<footer> 状态 : <span id="sf-status">就绪</span></footer>
 
-    <script src="./index.js"></script>
+<script src="./index.js"></script>
 </body>
 
 </html>

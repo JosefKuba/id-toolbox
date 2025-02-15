@@ -1,8 +1,8 @@
-const { shell } = require('electron');
+const {shell} = require('electron');
 
 const menuTemplate = function (param) {
 
-    const { mainWindow, openSettingsWindow } = param
+    const {mainWindow, openSettingsWindow} = param
 
     return [
         {
@@ -23,11 +23,11 @@ const menuTemplate = function (param) {
         {
             label: '编辑',
             submenu: [
-                { role: 'cut', label: '剪切' },
-                { role: 'copy', label: '复制' },
-                { role: 'paste', label: '粘贴' },
-                { role: 'delete', label: '删除' },
-                { role: 'selectAll', label: '全选' }
+                {role: 'cut', label: '剪切'},
+                {role: 'copy', label: '复制'},
+                {role: 'paste', label: '粘贴'},
+                {role: 'delete', label: '删除'},
+                {role: 'selectAll', label: '全选'}
             ]
         },
         {

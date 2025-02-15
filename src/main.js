@@ -1,9 +1,9 @@
-const { app, BrowserWindow, ipcMain, Menu } = require('electron');
+const {app, BrowserWindow, ipcMain, Menu} = require('electron');
 const fs = require('fs-extra');
 const path = require('path');
 const axios = require('axios');
 const unzipper = require('unzipper');
-const { EVDInit } = require("electron-version-deployer-cli/dist/main");
+const {EVDInit} = require("electron-version-deployer-cli/dist/main");
 const {menuTemplate} = require("./packages/menu");
 
 EVDInit({
@@ -28,7 +28,7 @@ let mainWindow, settingsWindow;
 // 定义配置文件
 const configFile = path.join(app.getPath('userData'), 'config.json');
 if (!fs.existsSync(configFile)) {
-    fs.writeFileSync(configFile, JSON.stringify({ friendGoogleId: "", friendGoogleDate: "" }), 'utf-8');
+    fs.writeFileSync(configFile, JSON.stringify({friendGoogleId: "", friendGoogleDate: ""}), 'utf-8');
 }
 
 // 远程配置的文件地址，给一个默认配置
@@ -210,7 +210,7 @@ app.whenReady().then(() => {
 
                     async function unzipFile(zipFilePath, extractToPath) {
                         fs.createReadStream(zipFilePath)
-                            .pipe(unzipper.Extract({ path: extractToPath }))
+                            .pipe(unzipper.Extract({path: extractToPath}))
                             .on('close', () => {
 
                                 console.log('解压完成');
@@ -259,9 +259,9 @@ app.whenReady().then(() => {
                     mainWindow.webContents.send("id-update", "文件下载失败 - 2");
                 });
         }).catch(error => {
-            console.error('Error: ' + error.message);
-            mainWindow.webContents.send("id-update", "检查更新失败. 请确保配置链接正确填写");
-        });
+        console.error('Error: ' + error.message);
+        mainWindow.webContents.send("id-update", "检查更新失败. 请确保配置链接正确填写");
+    });
 });
 
 
@@ -302,7 +302,7 @@ ipcMain.on('read-file', async (event, idContent) => {
     uniqueArr = uniqueArr.filter(Boolean)
 
     let result;
-    if (uniqueArr.length == 0) {
+    if (uniqueArr.length === 0) {
         result = "无结果"
     } else {
         result = uniqueArr.join("\n")

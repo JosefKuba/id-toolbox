@@ -1,9 +1,9 @@
 function performQuery() {
-    var outputText = document.getElementById('outputText');
+    const outputText = document.getElementById('outputText');
     outputText.value = '查询中...';
 
-    var input = document.getElementById('inputText').value;
-    var result = queryFunction(input);
+    const input = document.getElementById('inputText').value;
+    const result = queryFunction(input);
     updateOutput(result)
 }
 
