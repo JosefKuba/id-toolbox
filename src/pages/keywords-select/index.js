@@ -88,28 +88,26 @@ keywordsSelect.addEventListener('change', function () {
 
 
 function performQuery(selectMatch) {
-    var outputText = document.getElementById('outputText');
+    const outputText = document.getElementById('outputText');
     outputText.value = '处理中...';
 
-    var inputAll = document.getElementById('inputText').value;
-    var keywords = document.getElementById('keywords').value;
+    const inputAll = document.getElementById('inputText').value;
+    const keywords = document.getElementById('keywords').value;
 
-    var result = queryFunction(inputAll, keywords, selectMatch);
-
-    document.getElementById('outputText').value = result;
+    document.getElementById('outputText').value = queryFunction(inputAll, keywords, selectMatch);
 }
 
 function copyOutput() {
-    var outputText = document.getElementById('outputText');
+    const outputText = document.getElementById('outputText');
     outputText.select();
     document.execCommand('copy');
 }
 
 function clearInputAndOutput() {
-    var outputText = document.getElementById('outputText');
+    const outputText = document.getElementById('outputText');
     outputText.value = '';
 
-    var inputText = document.getElementById('inputText');
+    const inputText = document.getElementById('inputText');
     inputText.value = '';
 }
 
@@ -124,7 +122,7 @@ function queryFunction(input, keywords, selectMatch) {
     for (let i = 0; i < lines.length; i++) {
         let line = lines[i];
 
-        let regexString = keywords.filter(keyword => keyword != "").map(keyword => escapeRegExp(keyword)).join('|');
+        let regexString = keywords.filter(keyword => keyword !== "").map(keyword => escapeRegExp(keyword)).join('|');
 
         let regex = new RegExp('(' + regexString + ')');
 

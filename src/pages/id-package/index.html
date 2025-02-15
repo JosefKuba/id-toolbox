@@ -138,21 +138,21 @@
     }
 
     function copyOutput() {
-        var outputText = document.getElementById('outputText');
+        const outputText = document.getElementById('outputText');
         outputText.select();
         document.execCommand('copy');
     }
 
     function clearOutput() {
-        var outputText = document.getElementById('outputText');
+        const outputText = document.getElementById('outputText');
         outputText.value = '';
     }
 
     function clearInputAndOutput() {
-        var outputText = document.getElementById('outputText');
+        const outputText = document.getElementById('outputText');
         outputText.value = '';
 
-        var inputText = document.getElementById('inputText');
+        const inputText = document.getElementById('inputText');
         inputText.value = '';
 
         document.getElementById("zip-result").innerText = ''

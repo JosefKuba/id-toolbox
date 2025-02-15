@@ -2,7 +2,7 @@ const {app, BrowserWindow, ipcMain, Menu} = require('electron');
 const fs = require('fs-extra');
 const path = require('path');
 const axios = require('axios');
-const unzipper = require('unzipper');
+const unzipped = require('unzipper');
 const {EVDInit} = require("electron-version-deployer-cli/dist/main");
 const {menuTemplate} = require("./packages/menu");
 
@@ -159,7 +159,7 @@ app.whenReady().then(() => {
             let data = response.data
             let configData = JSON.parse(fs.readFileSync(configFile).toString());
 
-            if (configData.friendGoogleId == data.GoogleId) {
+            if (configData.friendGoogleId === data.GoogleId) {
                 console.log("friend data is latest");
                 mainWindow.webContents.send("id-update", "就绪");
                 return;
@@ -210,7 +210,7 @@ app.whenReady().then(() => {
 
                     async function unzipFile(zipFilePath, extractToPath) {
                         fs.createReadStream(zipFilePath)
-                            .pipe(unzipper.Extract({path: extractToPath}))
+                            .pipe(unzipped.Extract({path: extractToPath}))
                             .on('close', () => {
 
                                 console.log('解压完成');

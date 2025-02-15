@@ -12,7 +12,7 @@ function updateOutput(output) {
 }
 
 function copyOutput() {
-    var outputText = document.getElementById('outputText');
+    const outputText = document.getElementById('outputText');
     outputText.select();
     document.execCommand('copy');
 }
@@ -43,15 +43,15 @@ function copyOutputID() {
 }
 
 function clearOutput() {
-    var outputText = document.getElementById('outputText');
+    const outputText = document.getElementById('outputText');
     outputText.value = '';
 }
 
 function clearInputAndOutput() {
-    var outputText = document.getElementById('outputText');
+    const outputText = document.getElementById('outputText');
     outputText.value = '';
 
-    var inputText = document.getElementById('inputText');
+    const inputText = document.getElementById('inputText');
     inputText.value = '';
 }
 
@@ -96,13 +96,13 @@ function containsChineseCharacters(str) {
 // 匹配外文拼音
 function containsChinesePinYin(str) {
     // 将数组中的名称拼接成一个正则表达式字符串
-    var regexString = nameKeywords.map(name => escapeRegExp(name)).join('|');
+    const regexString = nameKeywords.map(name => escapeRegExp(name)).join('|');
 
     // 名字前
-    var regex_1 = new RegExp('^(' + regexString + ') ');
+    const regex_1 = new RegExp('^(' + regexString + ') ');
 
     // 名字后
-    var regex_2 = new RegExp(' (' + regexString + ')$');
+    const regex_2 = new RegExp(' (' + regexString + ')$');
 
     return regex_1.test(str) || regex_2.test(str);
 }
