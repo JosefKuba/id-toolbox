@@ -68,6 +68,12 @@ const menuTemplate = function (param) {
                     click: () => {
                         mainWindow.loadFile('src/pages/id-package/index.html');
                     }
+                },
+                {
+                    label: 'ID 去重工具',
+                    click: () => {
+                        mainWindow.loadFile('src/pages/id-unique/index.html');
+                    }
                 }
             ]
         },
