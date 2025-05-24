@@ -57,6 +57,7 @@
 </head>
 
 <body>
+<<<<<<< HEAD
 <div class="container mt-5">
     <h1 style="text-align:center">中文名字查询器</h1>
     <p>部分海外华人会用当地的拼音作为名字，直接通过姓名不容易区分该线索是否为华人线索。比如：<a
@@ -103,6 +104,40 @@
 <footer> 状态 : <span id="sf-status">就绪</span></footer>
 
 <script src="./index.js"></script>
+=======
+    <div class="container mt-5">
+        <h1 style="text-align:center">保加利亚名字查询器</h1>
+        <p>根据保加利亚名字<a href="https://monosnap.com/file/DBJZ70nP8Itjh3IVWx7NDaFD2jX1el"
+                target="_blank">结尾</a>的特点，根据给定的ID和名字，判断这些名字所属的国家。第一列为ID，第二列为名字。会输出三种结果：保加利亚、不确定国家、非保加利亚。结果并非完全准确，只是大致区分。
+        </p>
+
+        <div class="row">
+            <div class="col-md-5">
+                <textarea id="inputText" class="form-control input-textarea" style="height: 350px;"
+                    placeholder="100000257231664	Syn Yee"></textarea>
+            </div>
+
+            <div class="col-md-2">
+                <div class="button-group h-100 d-flex flex-column justify-content-center">
+                    <button class="btn btn-primary mb-2" onclick="performQuery()">查询</button>
+                    <button class="btn btn-success mb-2" onclick="copyOutput()">复制</button>
+                    <button class="btn btn-success mb-2" onclick="copyOutputID()"
+                        title="复制保加利亚ID，请确保ID位于第一列">保加ID</button>
+                    <button class="btn btn-danger" onclick="clearInputAndOutput()">清空</button>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <textarea id="outputText" class="form-control output-textarea" style="height: 350px;" readonly
+                    placeholder="结果将展示在这里"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <footer> 状态 : <span id="sf-status">就绪</span></footer>
+
+    <script src="./index.js"></script>
+>>>>>>> 7d8c7b598aca16ee413c5af62197cd69953876f0
 </body>
 
 </html>

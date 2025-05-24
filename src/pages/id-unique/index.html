@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <style>
+        /* 自定义样式，可以根据需要调整 */
+        .input-textarea {
+            float: left;
+            width: 40%;
+            /* 调整左浮动 textarea 的宽度 */
+            margin-right: 10px;
+        }
+
+        .output-textarea {
+            float: right;
+            width: 40%;
+            /* 调整右浮动 textarea 的宽度 */
+            margin-left: 10px;
+        }
+
+        .center-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            /* 垂直排列 */
+            justify-content: center;
+            height: 100%;
+        }
+
+        footer {
+            height: 30px;
+            /* 设置页脚高度 */
+            background-color: #333;
+            /* 设置背景色 */
+            color: #fff;
+            /* 设置文字颜色 */
+            text-align: center;
+            /* 文字居中 */
+            line-height: 30px;
+            /* 设置行高，保证文字在垂直方向居中 */
+            position: fixed;
+            /* 固定在页面底部 */
+            bottom: 0;
+            /* 距离页面底部距离 */
+            width: 100%;
+            /* 宽度100%，与页面同宽 */
+        }
+    </style>
+
+    <link href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container mt-5">
+    <h1 style="text-align:center">ID 去重工具</h1>
+    <p>在左侧输入有重复的ID，在右侧可以获取不重复ID</p>
+
+    <p>结果：<span id="unique-result"></span></p>
+
+    <div class="row mt-4">
+        <div class="col-md-5">
+                <textarea id="inputText" class="form-control input-textarea" style="height: 350px;"
+                          placeholder="放入要去重的ID"></textarea>
+        </div>
+
+        <div class="col-md-2">
+            <div class="button-group h-100 d-flex flex-column justify-content-center">
+                <button id="id-unzip" class="btn btn-primary mb-2" onclick="unique()">去重</button>
+                <button class="btn btn-success mb-2" onclick="copyOutput()">复制</button>
+                <button class="btn btn-danger" onclick="clearInputAndOutput()">清空</button>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+                <textarea id="outputText" class="form-control output-textarea" style="height: 350px;" readonly
+                          placeholder="去重结果将展示在这里"></textarea>
+        </div>
+    </div>
+</div>
+
+<footer> 状态 : <span id="sf-status">就绪</span></footer>
+
+<script>
+    // 去重
+    function unique(){
+        let inputText = document.getElementById('inputText').value.trim();
+        let ids = inputText.split('\n').filter(line => line.trim() !== '');
+
+        if (ids.length === 0) return
+
+        let uniqueIds = [...new Set(ids)]
+
+        document.getElementById('outputText').value = uniqueIds.join('\n');
+
+        document.getElementById("unique-result").innerText = `ID 共 ${ids.length} 个，不重复ID ${uniqueIds.length} 个`;
+    }
+
+    // 复制结果函数
+    function copyOutput() {
+        const outputText = document.getElementById('outputText');
+        outputText.select(); // 选中文本
+        document.execCommand('copy'); // 执行复制
+    }
+
+    // 清空输入和输出函数
+    function clearInputAndOutput() {
+        document.getElementById('outputText').value = '';
+        document.getElementById('inputText').value = '';
+        document.getElementById('unique-result').innerText = '';
+    }
+</script>
+</body>
+
+</html>
+

@@ -1,8 +1,8 @@
-const {shell} = require('electron');
+const { shell } = require('electron');
 
 const menuTemplate = function (param) {
 
-    const {mainWindow, openSettingsWindow} = param
+    const { mainWindow, openSettingsWindow } = param
 
     return [
         {
@@ -23,11 +23,11 @@ const menuTemplate = function (param) {
         {
             label: '编辑',
             submenu: [
-                {role: 'cut', label: '剪切'},
-                {role: 'copy', label: '复制'},
-                {role: 'paste', label: '粘贴'},
-                {role: 'delete', label: '删除'},
-                {role: 'selectAll', label: '全选'}
+                { role: 'cut', label: '剪切' },
+                { role: 'copy', label: '复制' },
+                { role: 'paste', label: '粘贴' },
+                { role: 'delete', label: '删除' },
+                { role: 'selectAll', label: '全选' }
             ]
         },
         {
@@ -46,9 +46,15 @@ const menuTemplate = function (param) {
                     }
                 },
                 {
-                    label: '匹配中文名称',
+                    label: '中文名字查询',
                     click: () => {
                         mainWindow.loadFile('src/pages/chinese-names/index.html');
+                    }
+                },
+                {
+                    label: '保加利亚名字查询',
+                    click: () => {
+                        mainWindow.loadFile('src/pages/bg-names/index.html');
                     }
                 },
                 {
@@ -67,6 +73,12 @@ const menuTemplate = function (param) {
                     label: 'ID 压缩 解压',
                     click: () => {
                         mainWindow.loadFile('src/pages/id-package/index.html');
+                    }
+                },
+                {
+                    label: 'ID 去重工具',
+                    click: () => {
+                        mainWindow.loadFile('src/pages/id-unique/index.html');
                     }
                 }
             ]
