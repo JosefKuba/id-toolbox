@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <style>
+        /* 自定义样式，可以根据需要调整 */
+        .input-textarea {
+            float: left;
+            width: 40%;
+            /* 调整左浮动 textarea 的宽度 */
+            margin-right: 10px;
+        }
+
+        .output-textarea {
+            float: right;
+            width: 40%;
+            /* 调整右浮动 textarea 的宽度 */
+            margin-left: 10px;
+        }
+
+        .center-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            /* 垂直排列 */
+            justify-content: center;
+            height: 100%;
+        }
+
+        footer {
+            height: 30px;
+            /* 设置页脚高度 */
+            background-color: #333;
+            /* 设置背景色 */
+            color: #fff;
+            /* 设置文字颜色 */
+            text-align: center;
+            /* 文字居中 */
+            line-height: 30px;
+            /* 设置行高，保证文字在垂直方向居中 */
+            position: fixed;
+            /* 固定在页面底部 */
+            bottom: 0;
+            /* 距离页面底部距离 */
+            width: 100%;
+            /* 宽度100%，与页面同宽 */
+        }
+    </style>
+
+    <link href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container mt-5">
+    <h1 style="text-align:center">匈牙利名字查询</h1>
+
+    <div class="row">
+        <div class="col-md-5">
+                <textarea id="inputText" class="form-control input-textarea" style="height: 350px;"
+                          placeholder="100000257231664	Syn Yee"></textarea>
+        </div>
+
+        <div class="col-md-2">
+            <div class="button-group h-100 d-flex flex-column justify-content-center">
+                <button class="btn btn-primary mb-2" onclick="performQuery()">查询</button>
+                <button class="btn btn-success mb-2" onclick="copyOutput()">复制</button>
+                <button class="btn btn-success mb-2" onclick="copyOutputID()" title="请确保ID位于第一列">复制ID</button>
+                <button class="btn btn-danger" onclick="clearInputAndOutput()">清空</button>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+                <textarea id="outputText" class="form-control output-textarea" style="height: 350px;" readonly
+                          placeholder="结果将展示在这里"></textarea>
+        </div>
+    </div>
+</div>
+
+<footer> 状态 : <span id="sf-status">就绪</span></footer>
+
+<script src="./index.js"></script>
+</body>
+
+</html>

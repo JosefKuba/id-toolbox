@@ -58,6 +58,12 @@ const menuTemplate = function (param) {
                     }
                 },
                 {
+                    label: '匈牙利名字查询',
+                    click: () => {
+                        mainWindow.loadFile('src/pages/hu-names/index.html');
+                    }
+                },
+                {
                     label: '关键词匹配工具',
                     click: () => {
                         mainWindow.loadFile('src/pages/keywords-select/index.html');
