@@ -1,6 +1,10 @@
 node_modules/
 dist/
-yarn.lock
 _dev/
 src_old/
 .idea/
+.env
+.env.*
+!.env.example
+*.pem
+*.key

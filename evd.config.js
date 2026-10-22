@@ -29,7 +29,7 @@ export default defineEVDConfig({
   },
   cloudflare: {
     url: "https://id-toolbox.pages.dev",
-    token: "s3TM3hbD8xbRYSk6cXeRiFEOOe3nS8I2tf2lJljq",
+    token: process.env.CLOUDFLARE_API_TOKEN || "",
     projectName: "id-toolbox",
   },
   prebuiltConfig: {},

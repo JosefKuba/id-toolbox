@@ -1,32 +1,45 @@
-const {ipcRenderer} = require('electron');
+function isHttpUrl(value) {
+    try {
+        const parsed = new URL(value);
+        return (parsed.protocol === "https:" || parsed.protocol === "http:") && Boolean(parsed.hostname);
+    } catch (e) {
+        return false;
+    }
+}
 
-// Load the saved remote URL when the page loads
-ipcRenderer.invoke('get-remote-url').then((url) => {
-    if (!url) {
-        // document.getElementById('sf-status').innerText = "缺少配置链接";
+window.idToolbox.getRemoteUrl().then((url) => {
+    if (!isHttpUrl(url)) {
         return;
     }
 
-    const firebaseUrl = url + '/keywrods.json';
+    const firebaseUrl = new URL("keywrods.json", url.endsWith("/") ? url : url + "/").href;
+    if (!isHttpUrl(firebaseUrl)) {
+        return;
+    }
 
-    // console.log(firebaseUrl)
-
-    // 从 firebase 获取关键词列表
     fetchData(firebaseUrl).then(data => {
-        if (data) {
-            keywordsApi = data.api
+        if (!data || !Array.isArray(data.sheetNames) || !isHttpUrl(data.api)) {
+            return;
+        }
 
-            let sheetNames = data.sheetNames
+        keywordsApi = data.api;
+        const select = document.getElementById("keywords-select");
+        select.replaceChildren();
 
-            let optionsHtml = `<option value="" selected>--</option>`
-            for (let i = 0; i < sheetNames.length; i++) {
-                if (!sheetNames[i]) {
-                    continue;
-                }
-                optionsHtml += `<option value="${sheetNames[i]}">${sheetNames[i]}</option>`
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.selected = true;
+        placeholder.textContent = "--";
+        select.appendChild(placeholder);
+
+        for (const sheetName of data.sheetNames) {
+            if (typeof sheetName !== "string" || !sheetName) {
+                continue;
             }
-
-            document.getElementById("keywords-select").innerHTML = optionsHtml
+            const option = document.createElement("option");
+            option.value = sheetName;
+            option.textContent = sheetName;
+            select.appendChild(option);
         }
     });
 });
@@ -40,7 +53,7 @@ async function fetchData(url) {
         return await response.json();
     } catch (error) {
         // document.getElementById('sf-status').innerText = "获取配置失败，请检查配置链接是否正确";
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data:', error && error.message ? error.message : "request failed");
     }
 }
 
@@ -61,13 +74,29 @@ keywordsSelect.addEventListener('change', function () {
     // 显示加载中的提示
     keywordsTextArea.value = "关键词加载中...";
 
-    // 构建 Google API 请求 URL
-    let googleApi = `${keywordsApi}?type=${value}`;
+    if (!isHttpUrl(keywordsApi)) {
+        keywordsTextArea.value = "加载失败，请稍后重试。";
+        return;
+    }
 
-    // 请求数据并处理
+    let googleApi;
+    try {
+        const apiUrl = new URL(keywordsApi);
+        apiUrl.searchParams.set("type", value);
+        googleApi = apiUrl.href;
+    } catch (e) {
+        keywordsTextArea.value = "加载失败，请稍后重试。";
+        return;
+    }
+
     fetchData(googleApi)
         .then(data => {
             // 处理数据
+            if (!Array.isArray(data)) {
+                keywordsTextArea.value = "加载失败，请稍后重试。";
+                return;
+            }
+
             let keywords = "";
 
             for (const item of data) {
@@ -80,7 +109,7 @@ keywordsSelect.addEventListener('change', function () {
         })
         .catch(error => {
             // 处理请求错误
-            console.error("Error fetching data:", error);
+            console.error("Error fetching data:", error && error.message ? error.message : "request failed");
             keywordsTextArea.value = "加载失败，请稍后重试。";
             // document.getElementById('sf-status').innerText = "获取配置失败，请检查配置链接是否正确";
         });

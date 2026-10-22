@@ -29,41 +29,41 @@
 </div>
 
 <script>
-    const {ipcRenderer} = require('electron');
-
-    // Load the saved remote URL when the page loads
-    ipcRenderer.invoke('get-remote-url').then((url) => {
+    window.idToolbox.getRemoteUrl().then((url) => {
         document.getElementById('remote-url').value = url || '';
     });
 
-    // URL 校验函数
     function validateURL(url) {
-        // 简单的 URL 格式验证 (可以根据需要更改正则表达式)
-        const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
-        return urlPattern.test(url);
+        try {
+            const parsed = new URL(url);
+            return (parsed.protocol === "https:" || parsed.protocol === "http:")
+                && !parsed.username
+                && !parsed.password
+                && Boolean(parsed.hostname);
+        } catch (e) {
+            return false;
+        }
     }
 
-    // Save the remote URL when the save button is clicked
+    const errorMessageElement = document.getElementById('error-message');
+
     document.getElementById('save-btn').addEventListener('click', () => {
         const remoteUrl = document.getElementById('remote-url').value.trim();
-        const errorMessageElement = document.getElementById('error-message');
 
-        // 校验 URL
         if (!validateURL(remoteUrl)) {
-            // 显示错误提示信息
             errorMessageElement.style.display = 'block';
         } else {
-            // 隐藏错误提示信息
             errorMessageElement.style.display = 'none';
-
-            // 发送保存请求
-            ipcRenderer.send('save-remote-url', remoteUrl);
+            window.idToolbox.saveRemoteUrl(remoteUrl);
         }
     });
 
-    // 监听主进程发送的关闭窗口消息，成功保存后关闭窗口
-    ipcRenderer.on('close-settings-window', () => {
-        ipcRenderer.send('close-settings-window'); // 请求主进程关闭窗口
+    window.idToolbox.onSaveRemoteUrlError(() => {
+        errorMessageElement.style.display = 'block';
+    });
+
+    window.idToolbox.onCloseSettings(() => {
+        window.idToolbox.requestCloseSettings();
     });
 </script>
 </body>
